@@ -12,7 +12,10 @@ import home from '/home.svg'
 import marketplace from '/marketplace.svg'
 import social from '/social.svg'
 import messagerie from '/messagerie.svg'
+import account from '/account.svg'
+import logout from '/logout.svg'
 import {Link} from "react-router-dom";
+import {Button} from "@mui/material";
 
 
 
@@ -20,7 +23,7 @@ const SideBarItem = ({icon, text, url}: any) => (
     <ListItem>
         <Link to={url} className="sidebar-link">
             <ListItemButton>
-                <ListItemIcon sx={{ mr: 1 }}><img src={icon} alt={text}/></ListItemIcon>
+                <ListItemIcon sx={{ mr: 0.5 }}><img src={icon} alt={text}/></ListItemIcon>
                 <ListItemText primary={text}/>
             </ListItemButton>
         </Link>
@@ -38,6 +41,15 @@ export default function SideBar() {
                 <SideBarItem icon={social} text="Social" url="/social"/>
                 <SideBarItem icon={marketplace} text="Marketplace" url="/marketplace"/>
                 <SideBarItem icon={messagerie} text="Messagerie" url="/messagerie"/>
+            </List>
+            <List style={{ marginTop: `auto` }} >
+                <SideBarItem icon={account} text="Mon compte" url="/compte"/>
+                <ListItem>
+                    <Button variant="contained" fullWidth sx={{borderRadius: '25px'}} color="error" className="sidebar-logout">
+                        <img src={logout} alt="Déconnexion"/>
+                        <span>Déconnexion</span>
+                    </Button>
+                </ListItem>
             </List>
         </>
     );

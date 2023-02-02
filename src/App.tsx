@@ -9,7 +9,7 @@ import {
     PageNotFound,
     Acceuil,
     Messagerie,
-    Social, Login
+    Social, Login, Compte
 } from './views';
 
 import {Layout} from './views/Layout'
@@ -37,7 +37,8 @@ const theme = createTheme({
     },
     palette: {
         primary: {main: "#64675A"},
-        secondary: {main: "#879472"}
+        secondary: {main: "#879472"},
+        error: {main: "#FFDCDC"}
     }
 });
 
@@ -49,6 +50,7 @@ const App = () => (
                 <Route path="marketplace" element={<Layout><Marketplace /></Layout>} />
                 <Route path="social" element={<Layout><Social /></Layout>} />
                 <Route path="messagerie" element={<Layout><Messagerie /></Layout>} />
+                <Route path="compte" element={<Layout><Compte /></Layout>} />
                 <Route path="*" element={<PageNotFound />} />
                 <Route path="login" element={<Login />} />
             </Route>

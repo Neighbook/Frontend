@@ -14,3 +14,16 @@
     font-size: 1.25rem;
     color: #64675A;
 }
+.sidebar-logout{
+    box-shadow: none !important;
+}
+.sidebar-logout span{
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #FF5656;
+    text-transform: none;
+}
+
+.sidebar-logout img{
+    margin-right: 1em;
+}
