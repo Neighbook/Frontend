@@ -13,6 +13,7 @@ const Header = () => (
             <Toolbar>
                 <Button><NavLink to="/">Accueil</NavLink></Button>
                 <Button><NavLink to="/marketplace">Marketplace</NavLink></Button>
+                <Button><NavLink to="/health">Status</NavLink></Button>
             </Toolbar>
         </AppBar>
         <Outlet />

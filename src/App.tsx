@@ -9,6 +9,7 @@ import {
     PageNotFound,
     Header,
     Dashboard,
+    Status,
 } from './views';
 
 const App = () => (
@@ -16,6 +17,7 @@ const App = () => (
         <Route path="/" element={<Header />}>
             <Route index element={<Dashboard />} />
             <Route path="marketplace" element={<Marketplace />} />
+            <Route path="health" element={<Status />} />
             <Route path="*" element={<PageNotFound />} />
         </Route>
     </Routes>
