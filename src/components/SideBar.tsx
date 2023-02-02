@@ -31,7 +31,7 @@ export default function SideBar() {
     const drawer = (
         <>
             <Box sx={{display: 'flex', justifyContent: 'center',  m: 4}}>
-                <img src={logo} alt="logo" className='sidebar-logo'/>
+                <Link to="/"><img src={logo} alt="logo" className='sidebar-logo'/></Link>
             </Box>
             <List>
                 <SideBarItem icon={home} text="Accueil" url="/"/>
