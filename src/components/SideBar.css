@@ -1,0 +1,16 @@
+.sidebar-logo{
+    width: 149px;
+    height: 92.78px;
+}
+
+.sidebar-link{
+    color: inherit;
+    text-decoration: inherit;
+    width: 100%;
+}
+
+.sidebar-link span{
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #64675A;
+}
