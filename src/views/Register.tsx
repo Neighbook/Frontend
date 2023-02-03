@@ -65,7 +65,7 @@ export default function Register() {
                             alignItems: 'center',
                         }}
                     >
-                        <Box component="form" onSubmit={handleSubmit} onChange={handleChange} noValidate sx={{ mt: 1 }}>
+                        <Box component="form" onSubmit={handleSubmit} onChange={handleChange} sx={{ mt: 1 }}>
                             <TextField
                                 id="name"
                                 margin="normal"
