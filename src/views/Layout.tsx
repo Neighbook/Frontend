@@ -4,7 +4,11 @@ import Box from "@mui/material/Box";
 
 const drawerWidth = 280;
 
-export const Layout = ({ children }: any) => (
+interface Props{
+    children: never;
+}
+
+export const Layout = ({ children }: Props) => (
     <Box sx={{display: 'flex'}}>
         <Box
             component="nav"

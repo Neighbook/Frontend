@@ -1,14 +1,12 @@
 import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import logo from "/logo.svg";
-import login from "/login.svg";
 import CountrySelect from "../components/CountrySelect";
 import {Grid, MenuItem} from "@mui/material";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -18,23 +16,30 @@ import {useState} from "react";
 
 
 export default function Register() {
-    const [passwordError, setPasswordError] = useState(false)
+    const [passwordError, setPasswordError] = useState(false);
     const [birthday, setBirthday] = useState<Dayjs | null>(
-        dayjs('2014-08-18T21:11:54')
+        Dayjs('2014-08-18T21:11:54')
     );
     const [formData, updateFormData] = React.useState({
-            name: null,
-            surname: null,
-            country: null,
-            number: null,
-            sex: '',
-            email: null,
-            password: null,
-            password2: null,
-        });
+        name: null,
+        surname: null,
+        country: null,
+        number: null,
+        sex: '',
+        email: null,
+        password: '',
+        password2: '',
+    });
 
-    const handleChange = (e: any) => {
-        console.log(e)
+    interface Event{
+        target:{
+            id: string;
+            name: string;
+            value: Object | string;
+        }
+    }
+    const handleChange = (e: Event) => {
+        console.log(e);
         updateFormData({
             ...formData,
             [e.target.id || e.target.name]: e.target.value
@@ -45,7 +50,7 @@ export default function Register() {
         event.preventDefault();
         console.log(formData);
         if(formData.password !== formData.password2){
-            setPasswordError(true)
+            setPasswordError(true);
         }
     };
 

@@ -17,9 +17,13 @@ import logout from '/logout.svg';
 import {Link} from "react-router-dom";
 import {Button} from "@mui/material";
 
+interface Props{
+    icon: string;
+    text: string;
+    url: string;
+}
 
-
-const SideBarItem = ({icon, text, url}: any) => (
+const SideBarItem = ({icon, text, url}: Props) => (
     <ListItem>
         <Link to={url} className="sidebar-link">
             <ListItemButton>
