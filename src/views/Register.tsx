@@ -13,10 +13,13 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {useState} from "react";
 import {Link} from "react-router-dom";
+import {Navigate} from "react-router";
+import {useAuth} from "../components/AuthProvider";
 
 
 
 export default function Register() {
+    const {isLoggedIn} = useAuth();
     const [passwordError, setPasswordError] = useState(false);
     const [birthday, setBirthday] = useState<dayjs.Dayjs | null>(
         dayjs('2014-08-18T21:11:54')
@@ -33,6 +36,10 @@ export default function Register() {
         password: '',
         password2: '',
     });
+
+    if(isLoggedIn()){
+        return <Navigate to="/" />;
+    }
 
     const handleFormChange = (event: React.ChangeEvent<HTMLFormElement>) => {
         updateFormData({

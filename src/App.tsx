@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Routes,
-    Route, useNavigate,
+    Route
 } from 'react-router';
 
 import {
@@ -12,9 +12,9 @@ import {
     Social, Login, Compte, Register
 } from './views';
 
-import {Layout} from './views/Layout';
+import {AuthenticatedLayout} from './views/AuthenticatedLayout';
 import {createTheme, ThemeProvider} from "@mui/material";
-import {fakeAuth} from "./hook/auth";
+import {AuthProvider} from "./components/AuthProvider";
 
 
 const theme = createTheme({
@@ -38,35 +38,25 @@ const theme = createTheme({
     },
     palette: {
         primary: {main: "#64675A"},
-        secondary: {main: "#879472"},
-        error: {main: "#FFDCDC"}
+        secondary: {main: "#879472"}
     }
 });
 
-const AuthContext = React.createContext(null);
-
 const App = () => {
-    const [token, setToken] = React.useState<string | null>(null);
-
-    const handleLogin = async (email: string, password: string) => {
-        const token = await fakeAuth(email, password);
-        setToken(token);
-    };
-
     return (
         <ThemeProvider theme={theme}>
-            <AuthContext.Provider value={token}>
+            <AuthProvider>
                 <Routes>
-                    <Route index element={<Layout><Acceuil /></Layout>} />
-                    <Route path="marketplace" element={<Layout><Marketplace /></Layout>} />
-                    <Route path="social" element={<Layout><Social /></Layout>} />
-                    <Route path="messagerie" element={<Layout><Messagerie /></Layout>} />
-                    <Route path="compte" element={<Layout><Compte /></Layout>} />
+                    <Route index element={<AuthenticatedLayout><Acceuil /></AuthenticatedLayout>} />
+                    <Route path="marketplace" element={<AuthenticatedLayout><Marketplace /></AuthenticatedLayout>} />
+                    <Route path="social" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
+                    <Route path="messagerie" element={<AuthenticatedLayout><Messagerie /></AuthenticatedLayout>} />
+                    <Route path="compte" element={<AuthenticatedLayout><Compte /></AuthenticatedLayout>} />
                     <Route path="*" element={<PageNotFound />} />
-                    <Route path="login" element={<Login handleLogin={handleLogin} />} />
+                    <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
                 </Routes>
-            </AuthContext.Provider>
+            </AuthProvider>
         </ThemeProvider>
     );
 };

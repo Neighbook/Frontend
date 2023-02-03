@@ -1,0 +1,6 @@
+{
+  "api_base_url": "<%api_url%>",
+  "auth_route": "/auth",
+  "user_route": "/user",
+  "social_route": "/social"
+}

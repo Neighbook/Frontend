@@ -16,14 +16,15 @@ import account from '/asset/images/account.svg';
 import logout from '/asset/images/logout.svg';
 import {Link} from "react-router-dom";
 import {Button} from "@mui/material";
+import {useAuth} from "./AuthProvider";
 
-interface Props{
+interface SidebarItemProps{
     icon: string;
     text: string;
     url: string;
 }
 
-const SideBarItem = ({icon, text, url}: Props) => (
+const SideBarItem = ({icon, text, url}: SidebarItemProps) => (
     <ListItem>
         <Link to={url} className="sidebar-link">
             <ListItemButton>
@@ -35,6 +36,12 @@ const SideBarItem = ({icon, text, url}: Props) => (
 );
 
 export default function SideBar() {
+    const {onLogout} = useAuth();
+
+    const handleClick = () => {
+        onLogout();
+    };
+
     const drawer = (
         <>
             <Box sx={{display: 'flex', justifyContent: 'center',  m: 4}}>
@@ -49,7 +56,13 @@ export default function SideBar() {
             <List style={{ marginTop: `auto` }} >
                 <SideBarItem icon={account} text="Mon compte" url="/compte"/>
                 <ListItem>
-                    <Button variant="contained" fullWidth sx={{borderRadius: '25px'}} color="error" className="sidebar-logout">
+                    <Button variant="contained"
+                        fullWidth
+                        sx={{borderRadius: '25px', backgroundColor: '#FFDCDC'}}
+                        className="sidebar-logout"
+                        color="error"
+                        onClick={handleClick}
+                    >
                         <img src={logout} alt="Déconnexion"/>
                         <span>Déconnexion</span>
                     </Button>
