@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 const drawerWidth = 280;
 
 interface Props{
-    children: never;
+    children: JSX.Element | string;
 }
 
 export const Layout = ({ children }: Props) => (

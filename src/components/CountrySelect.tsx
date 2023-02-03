@@ -9,13 +9,13 @@ interface Props{
         code: string,
         label: string,
         phone: string
-    };
-    id: string;
+    } | null;
+    name: string;
 }
-export default function CountrySelect({onChange, value, id}: Props) {
+export default function CountrySelect({onChange, value, name}: Props) {
     return (
         <Autocomplete
-            id={id}
+            id={name}
             options={countries}
             autoHighlight
             getOptionLabel={(option): string => {
@@ -25,7 +25,7 @@ export default function CountrySelect({onChange, value, id}: Props) {
             onChange={(event, newInputValue) => {
                 onChange({
                     target:{
-                        id: id,
+                        name: name,
                         value: newInputValue
                     }
                 });

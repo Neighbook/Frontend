@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -17,12 +17,14 @@ import {useState} from "react";
 
 export default function Register() {
     const [passwordError, setPasswordError] = useState(false);
-    const [birthday, setBirthday] = useState<Dayjs | null>(
-        Dayjs('2014-08-18T21:11:54')
+    const [birthday, setBirthday] = useState<dayjs.Dayjs | null>(
+        dayjs('2014-08-18T21:11:54')
     );
     const [formData, updateFormData] = React.useState({
         name: null,
         surname: null,
+        username: null,
+        birthday: '',
         country: null,
         number: null,
         sex: '',
@@ -31,27 +33,28 @@ export default function Register() {
         password2: '',
     });
 
-    interface Event{
-        target:{
-            id: string;
-            name: string;
-            value: Object | string;
-        }
-    }
-    const handleChange = (e: Event) => {
-        console.log(e);
+    const handleFormChange = (event: React.ChangeEvent<HTMLFormElement>) => {
         updateFormData({
             ...formData,
-            [e.target.id || e.target.name]: e.target.value
+            [event.target.name]: event.target.value as string
+        });
+    };
+
+    const handleSelecthange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        updateFormData({
+            ...formData,
+            [event.target.name]: event.target.value
         });
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(formData);
         if(formData.password !== formData.password2){
             setPasswordError(true);
         }
+        formData.birthday = birthday ? birthday.toISOString() : '';
+
+        console.log(formData);
     };
 
     return (
@@ -70,9 +73,9 @@ export default function Register() {
                             alignItems: 'center',
                         }}
                     >
-                        <Box component="form" onSubmit={handleSubmit} onChange={handleChange} sx={{ mt: 1 }}>
+                        <Box component="form" onSubmit={handleSubmit} onChange={handleFormChange} sx={{ mt: 1 }}>
                             <TextField
-                                id="name"
+                                name="name"
                                 margin="normal"
                                 required
                                 fullWidth
@@ -84,7 +87,7 @@ export default function Register() {
                                 autoComplete="name"
                             />
                             <TextField
-                                id="surname"
+                                name="surname"
                                 margin="normal"
                                 required
                                 fullWidth
@@ -95,10 +98,21 @@ export default function Register() {
                                 variant="standard"
                                 autoComplete="surname"
                             />
+                            <TextField
+                                name="username"
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="Nom d'utilisateur"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                variant="standard"
+                                autoComplete="username"
+                            />
                             <Grid container spacing={2}>
                                 <Grid item xs={3}>
                                     <TextField
-                                        id="sex"
                                         name="sex"
                                         margin="normal"
                                         required
@@ -109,7 +123,7 @@ export default function Register() {
                                             shrink: true,
                                         }}
                                         variant="standard"
-                                        onChange={handleChange}
+                                        onChange={handleSelecthange}
                                         value={formData.sex}
                                     >
                                         <MenuItem value="M">M</MenuItem>
@@ -138,11 +152,11 @@ export default function Register() {
                             </Grid>
                             <Grid container spacing={2}>
                                 <Grid item xs={6}>
-                                    <CountrySelect onChange={handleChange} value={formData.country} id="country"/>
+                                    <CountrySelect onChange={handleSelecthange} value={formData.country} name="country"/>
                                 </Grid>
                                 <Grid item xs={6}>
                                     <TextField
-                                        id="number"
+                                        name="number"
                                         margin="normal"
                                         required
                                         fullWidth
@@ -157,7 +171,7 @@ export default function Register() {
                                 </Grid>
                             </Grid>
                             <TextField
-                                id="email"
+                                name="email"
                                 margin="normal"
                                 required
                                 fullWidth
@@ -172,7 +186,7 @@ export default function Register() {
                             <Grid container spacing={2}>
                                 <Grid item xs={6}>
                                     <TextField
-                                        id="password"
+                                        name="password"
                                         margin="normal"
                                         required
                                         fullWidth
@@ -188,7 +202,7 @@ export default function Register() {
                                 </Grid>
                                 <Grid item xs={6}>
                                     <TextField
-                                        id="password2"
+                                        name="password2"
                                         margin="normal"
                                         required
                                         error={passwordError}

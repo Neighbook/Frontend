@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import logo from "/logo.svg";
 import login from "/login.svg";
-
+import './Login.css';
 
 
 export default function Login() {
@@ -85,7 +85,7 @@ export default function Login() {
                     </Box>
                 </Container>
             </Container>
-            <img src={login} alt="logo" style={{width: '100%', maxHeight: '40vh', position: 'absolute', left: '0px', bottom: '0px', 'object-fit': 'cover', 'object-position': "0 0"}}/>
+            <img src={login} alt="logo" className="login-illustration" />
         </>
     );
 }
