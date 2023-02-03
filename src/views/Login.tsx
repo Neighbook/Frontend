@@ -10,7 +10,7 @@ import './Login.css';
 import {Link} from "react-router-dom";
 
 
-export default function Login() {
+export default function Login({handleLogin}) {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
