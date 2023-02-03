@@ -7,6 +7,7 @@ import Container from '@mui/material/Container';
 import logo from "/logo.svg";
 import login from "/login.svg";
 import './Login.css';
+import {Link} from "react-router-dom";
 
 
 export default function Login() {
@@ -62,15 +63,16 @@ export default function Login() {
                                 }}
                                 variant="standard"
                                 autoComplete="email"
-                                autoFocus
                             />
 
                             <Box
                                 sx={{
                                     display: 'flex',
-                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
                                 }}
                             >
+                                <Link to="/register">Créer un compte</Link>
                                 <Button
                                     type="submit"
                                     variant="contained"

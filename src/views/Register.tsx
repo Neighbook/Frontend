@@ -12,6 +12,7 @@ import {Grid, MenuItem} from "@mui/material";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {useState} from "react";
+import {Link} from "react-router-dom";
 
 
 
@@ -222,9 +223,11 @@ export default function Register() {
                             <Box
                                 sx={{
                                     display: 'flex',
-                                    flexDirection: 'row-reverse',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
                                 }}
                             >
+                                <Link to="/login">Se connecter</Link>
                                 <Button
                                     type="submit"
                                     variant="contained"
