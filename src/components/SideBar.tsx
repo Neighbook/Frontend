@@ -6,14 +6,14 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import logo from '/logo.svg'
-import './SideBar.css'
-import home from '/home.svg'
-import marketplace from '/marketplace.svg'
-import social from '/social.svg'
-import messagerie from '/messagerie.svg'
-import account from '/account.svg'
-import logout from '/logout.svg'
+import logo from '/logo.svg';
+import './SideBar.css';
+import home from '/home.svg';
+import marketplace from '/marketplace.svg';
+import social from '/social.svg';
+import messagerie from '/messagerie.svg';
+import account from '/account.svg';
+import logout from '/logout.svg';
 import {Link} from "react-router-dom";
 import {Button} from "@mui/material";
 
@@ -28,7 +28,7 @@ const SideBarItem = ({icon, text, url}: any) => (
             </ListItemButton>
         </Link>
     </ListItem>
-)
+);
 
 export default function SideBar() {
     const drawer = (
@@ -63,7 +63,7 @@ export default function SideBar() {
                 [`& .MuiDrawer-paper`]: { width: 287, boxSizing: 'border-box', boxShadow: 4 },
             }}
         >
-                    {drawer}
+            {drawer}
         </Drawer>
     );
 }

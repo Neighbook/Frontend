@@ -12,7 +12,7 @@ import {
     Social, Login, Compte
 } from './views';
 
-import {Layout} from './views/Layout'
+import {Layout} from './views/Layout';
 import {createTheme, ThemeProvider} from "@mui/material";
 
 
