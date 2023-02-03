@@ -24,13 +24,13 @@ export default function Login() {
         <>
             <img src={logo} alt="logo"/>
             <Container component="main" maxWidth="md">
-                <Typography component="h1" variant="h4" sx={{textAlign: 'center', marginTop: 15, fontWeight: 700}}>
-                Bienvenue sur Neighbook, le réseau social de proximité !
+                <Typography component="h1" variant="h4" sx={{textAlign: 'center', marginTop: '10vh', fontWeight: 700}}>
+                    Bienvenue sur Neighbook, le réseau social de proximité !
                 </Typography>
                 <Container component="main" maxWidth="xs">
                     <Box
                         sx={{
-                            marginTop: 5,
+                            marginTop: '5vh',
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
@@ -79,14 +79,14 @@ export default function Login() {
                                     size="large"
                                     sx={{ mt: 3, mb: 2, borderRadius: 0 }}
                                 >
-                            Connexion
+                                    Connexion
                                 </Button>
                             </Box>
                         </Box>
                     </Box>
                 </Container>
             </Container>
-            <img src={login} alt="logo" style={{width: '100%', height: '40vh', position: 'absolute', left: '0px', bottom: '0px', 'object-fit': 'cover', 'object-position': "0 0"}}/>
+            <img src={login} alt="logo" style={{width: '100%', maxHeight: '40vh', position: 'absolute', left: '0px', bottom: '0px', 'object-fit': 'cover', 'object-position': "0 0"}}/>
         </>
     );
 }

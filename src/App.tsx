@@ -9,7 +9,7 @@ import {
     PageNotFound,
     Acceuil,
     Messagerie,
-    Social, Login, Compte
+    Social, Login, Compte, Register
 } from './views';
 
 import {Layout} from './views/Layout';
@@ -53,6 +53,7 @@ const App = () => (
                 <Route path="compte" element={<Layout><Compte /></Layout>} />
                 <Route path="*" element={<PageNotFound />} />
                 <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
             </Route>
         </Routes>
     </ThemeProvider>
