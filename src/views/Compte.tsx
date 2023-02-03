@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import {useAuth} from "../components/AuthProvider";
 
-const Marketplace = () => {
+const Compte = () => {
     const {user} = useAuth();
 
     return (
@@ -20,4 +20,4 @@ const Marketplace = () => {
     );
 };
 
-export default Marketplace;
+export default Compte;

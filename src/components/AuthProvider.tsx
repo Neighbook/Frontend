@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }: Props) => {
     const navigate = useNavigate();
 
     useEffect(()=>{
-        if(token.token !== null && user === null){
+        if(token.token !== undefined && token.token !== null && user === null){
             setUser(getUserFromToken(token.token));
         }
     }, [token, user]);
