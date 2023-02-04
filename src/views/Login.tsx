@@ -4,8 +4,8 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import logo from "/logo.svg";
-import login from "/login.svg";
+import logo from "/asset/images/logo.svg";
+import login from "/asset/images/login.svg";
 import './Login.css';
 import {Link} from "react-router-dom";
 

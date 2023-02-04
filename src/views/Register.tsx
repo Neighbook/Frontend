@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import logo from "/logo.svg";
+import logo from "/asset/images/logo.svg";
 import CountrySelect from "../components/CountrySelect";
 import {Grid, MenuItem} from "@mui/material";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
