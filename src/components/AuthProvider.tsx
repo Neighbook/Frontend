@@ -3,6 +3,7 @@ import {login} from "../hook/auth";
 import {useLocation, useNavigate} from "react-router";
 import { decodeToken, isExpired } from "react-jwt";
 import { useCookies } from "react-cookie";
+import {neighbookApi} from "../hook/neighbookApi";
 
 interface Props{
     children: JSX.Element | string
@@ -31,7 +32,7 @@ interface Location{
 }
 
 interface AuthContextType{
-    user: User | null
+    currentUser: User | null
     getToken: Function
     onLogin?: (email: string, password: string) => Promise<void>;
     onLogout: Function
@@ -39,7 +40,7 @@ interface AuthContextType{
 }
 
 const AuthContext = React.createContext<AuthContextType>({
-    user: null,
+    currentUser: null,
     getToken: ()=>null,
     onLogout: ()=>null,
     isLoggedIn: ()=>false
@@ -61,15 +62,18 @@ const getUserFromToken = (token: string): User => {
 
 export const AuthProvider = ({ children }: Props) => {
     const [token, setToken, removeToken] = useCookies(['token']);
-    const [user, setUser] = React.useState<User | null>(null);
+    const [currentUser, setCurrentUser] = React.useState<User | null>(null);
     const location = useLocation() as Location;
     const navigate = useNavigate();
 
     useEffect(()=>{
-        if(token.token !== undefined && token.token !== null && user === null){
-            setUser(getUserFromToken(token.token));
+        if(token.token !== null && token.token !== undefined){
+            neighbookApi.setToken(token.token);
+            if(currentUser === null) {
+                setCurrentUser(getUserFromToken(token.token));
+            }
         }
-    }, [token, user]);
+    }, [token, currentUser]);
 
     const getToken = (): string => {
         if(token.token === null){
@@ -97,7 +101,7 @@ export const AuthProvider = ({ children }: Props) => {
     };
 
     const value = {
-        user,
+        currentUser,
         getToken,
         onLogin: handleLogin,
         onLogout: handleLogout,

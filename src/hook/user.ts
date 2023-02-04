@@ -1,9 +1,15 @@
-import {user} from "./neighbookApi";
+import {userApi} from "./neighbookApi";
+import type {GenericAbortSignal} from "axios";
 
-export const getUser = async (user_id: string): Promise<{}> => {
-    const apiRes = await user.get(user_id);
+export interface User{
+    nom?: string
+    prenom?: string
+}
+
+export const getUser = async (user_id: string, signal: GenericAbortSignal): Promise<User> => {
+    const apiRes = await userApi.get(user_id, {signal: signal});
     if(apiRes.status === 200){
-        return apiRes.data as string;
+        return apiRes.data as User;
     }
     throw Error("Login error");
 };
