@@ -11,11 +11,13 @@ import {Link} from "react-router-dom";
 import {useState} from "react";
 import {useAuth} from "../components/AuthProvider";
 import {Navigate} from "react-router";
+import {CircularProgress} from "@mui/material";
 
 
 export default function Login() {
     const {onLogin, isLoggedIn} = useAuth();
     const [authError, setAuthError] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [formData, updateFormData] = React.useState({
         email: '',
         password: ''
@@ -36,7 +38,11 @@ export default function Login() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if(onLogin) {
-            onLogin(formData.email, formData.password).catch(() => {setAuthError(true);});
+            setLoading(true);
+            onLogin(formData.email, formData.password).catch(() => {
+                setAuthError(true);
+                setLoading(false);
+            });
         }
     };
 
@@ -95,15 +101,31 @@ export default function Login() {
                                 }}
                             >
                                 <Link to="/register" style={{color: "#64675A"}}>Créer un compte</Link>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="secondary"
-                                    size="large"
-                                    sx={{ mt: 3, mb: 2, borderRadius: 0 }}
-                                >
-                                    Connexion
-                                </Button>
+                                <Box sx={{ position: 'relative' }}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="secondary"
+                                        size="large"
+                                        disabled={loading}
+                                        sx={{ mt: 3, mb: 2, borderRadius: 0 }}
+                                    >
+                                        Connexion
+                                    </Button>
+                                    {loading && (
+                                        <CircularProgress
+                                            size="30px"
+                                            sx={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                marginTop: '-12px',
+                                                marginLeft: '-15px',
+                                            }}
+                                        />
+                                    )}
+                                </Box>
+
                             </Box>
                         </Box>
                     </Box>

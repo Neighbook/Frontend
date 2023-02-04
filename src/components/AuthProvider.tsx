@@ -35,6 +35,7 @@ interface AuthContextType{
     currentUser: User | null
     getToken: Function
     onLogin?: (email: string, password: string) => Promise<void>;
+    onRegister: Function;
     onLogout: Function
     isLoggedIn: ()=>boolean
 }
@@ -43,6 +44,7 @@ const AuthContext = React.createContext<AuthContextType>({
     currentUser: null,
     getToken: ()=>null,
     onLogout: ()=>null,
+    onRegister: ()=>null,
     isLoggedIn: ()=>false
 });
 
@@ -89,6 +91,11 @@ export const AuthProvider = ({ children }: Props) => {
         navigate(origin);
     };
 
+    const handleRegister = (token: string): void => {
+        setToken('token', token, { path: '/' });
+        navigate('/');
+    };
+
     const handleLogout = (): void => {
         removeToken('token');
     };
@@ -104,6 +111,7 @@ export const AuthProvider = ({ children }: Props) => {
         currentUser,
         getToken,
         onLogin: handleLogin,
+        onRegister: handleRegister,
         onLogout: handleLogout,
         isLoggedIn
     };

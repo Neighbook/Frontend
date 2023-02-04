@@ -8,31 +8,48 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import logo from "/asset/images/logo.svg";
 import CountrySelect from "../components/CountrySelect";
-import {Grid, MenuItem} from "@mui/material";
+import {CircularProgress, Grid, MenuItem} from "@mui/material";
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import {useState} from "react";
 import {Link} from "react-router-dom";
 import {Navigate} from "react-router";
 import {useAuth} from "../components/AuthProvider";
+import {register} from "../hook/auth";
 
 
+interface formDataType{
+    lastname: string,
+    firstname: string,
+    username: string,
+    country: {
+        code: string,
+        label: string,
+        phone: string
+    } | null,
+    number: string,
+    sex: string,
+    email: string,
+    password: string,
+    password2: string,
+}
 
 export default function Register() {
-    const {isLoggedIn} = useAuth();
+    const {isLoggedIn, onRegister} = useAuth();
+    const [loading, setLoading] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const [registerError, setRegisterError] = useState(false);
     const [birthday, setBirthday] = useState<dayjs.Dayjs | null>(
         dayjs('2014-08-18T21:11:54')
     );
-    const [formData, updateFormData] = React.useState({
-        name: null,
-        surname: null,
-        username: null,
-        birthday: '',
+    const [formData, updateFormData] = React.useState<formDataType>({
+        lastname: '',
+        firstname: '',
+        username: '',
         country: null,
-        number: null,
+        number: '',
         sex: '',
-        email: null,
+        email: '',
         password: '',
         password2: '',
     });
@@ -59,10 +76,26 @@ export default function Register() {
         event.preventDefault();
         if(formData.password !== formData.password2){
             setPasswordError(true);
+            return;
         }
-        formData.birthday = birthday ? birthday.toISOString() : '';
-
-        console.log(formData);
+        setLoading(true);
+        register(
+            formData.firstname,
+            formData.lastname,
+            formData.sex,
+            formData.username,
+            birthday ? birthday.toISOString(): '',
+            formData.email,
+            formData.password,
+            formData.number,
+            formData.country ? formData.country.code : '',
+            ""
+        ).then((token)=>{
+            onRegister(token);
+        }).catch(()=>{
+            setLoading(false);
+            setRegisterError(true);
+        });
     };
 
     return (
@@ -83,7 +116,7 @@ export default function Register() {
                     >
                         <Box component="form" onSubmit={handleSubmit} onChange={handleFormChange} sx={{ mt: 1 }}>
                             <TextField
-                                name="name"
+                                name="lastname"
                                 margin="normal"
                                 required
                                 fullWidth
@@ -92,10 +125,10 @@ export default function Register() {
                                     shrink: true,
                                 }}
                                 variant="standard"
-                                autoComplete="name"
+                                autoComplete="family-name"
                             />
                             <TextField
-                                name="surname"
+                                name="firstname"
                                 margin="normal"
                                 required
                                 fullWidth
@@ -104,7 +137,7 @@ export default function Register() {
                                     shrink: true,
                                 }}
                                 variant="standard"
-                                autoComplete="surname"
+                                autoComplete="given-name"
                             />
                             <TextField
                                 name="username"
@@ -117,6 +150,8 @@ export default function Register() {
                                 }}
                                 variant="standard"
                                 autoComplete="username"
+                                error={registerError}
+                                helperText={registerError&&"nom d'utilisateur dejà utilisé"}
                             />
                             <Grid container spacing={2}>
                                 <Grid item xs={3}>
@@ -133,6 +168,7 @@ export default function Register() {
                                         variant="standard"
                                         onChange={handleSelecthange}
                                         value={formData.sex}
+                                        autoComplete="sex"
                                     >
                                         <MenuItem value="M">M</MenuItem>
                                         <MenuItem value="F">F</MenuItem>
@@ -174,7 +210,7 @@ export default function Register() {
                                             shrink: true,
                                         }}
                                         variant="standard"
-                                        autoComplete="phone"
+                                        autoComplete="tel"
                                     />
                                 </Grid>
                             </Grid>
@@ -190,6 +226,8 @@ export default function Register() {
                                 }}
                                 variant="standard"
                                 autoComplete="email"
+                                error={registerError}
+                                helperText={registerError&&"email dejà utilisé"}
                             />
                             <Grid container spacing={2}>
                                 <Grid item xs={6}>
@@ -235,15 +273,30 @@ export default function Register() {
                                 }}
                             >
                                 <Link to="/login" style={{color: "#64675A"}}>Se connecter</Link>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="secondary"
-                                    size="large"
-                                    sx={{ mt: 3, mb: 2, borderRadius: 0 }}
-                                >
-                            Inscription
-                                </Button>
+                                <Box sx={{ position: 'relative' }}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="secondary"
+                                        size="large"
+                                        disabled={loading}
+                                        sx={{ mt: 3, mb: 2, borderRadius: 0 }}
+                                    >
+                                        Inscription
+                                    </Button>
+                                    {loading && (
+                                        <CircularProgress
+                                            size="30px"
+                                            sx={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                marginTop: '-12px',
+                                                marginLeft: '-15px',
+                                            }}
+                                        />
+                                    )}
+                                </Box>
                             </Box>
                         </Box>
                     </Box>

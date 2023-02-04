@@ -1,10 +1,10 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import logo from "/logo.svg";
+import logo from "/asset/images/logo.svg";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import login from "/login.svg";
+import login from "/asset/images/login.svg";
 import {Link} from "react-router-dom";
 
 const PageNotFound = () => {
