@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { HashRouter } from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 
 import App from './App';
 
@@ -13,8 +13,8 @@ root.render(
     <React.StrictMode>
         {/* Pour être déployé sur des hébergeurs static style GitHub pages */}
         {/* Peut être facilement changer par BrowserRouter si plus utile */}
-        <HashRouter>
+        <BrowserRouter>
             <App />
-        </HashRouter>
+        </BrowserRouter>
     </React.StrictMode>,
 );

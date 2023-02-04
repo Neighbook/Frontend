@@ -1,10 +1,10 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 
-const Dashboard = () => (
+const Marketplace = () => (
     <Typography variant="h1">
-        Page d'accueil
+        Compte
     </Typography>
 );
 
-export default Dashboard;
+export default Marketplace;
