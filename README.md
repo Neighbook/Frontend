@@ -1,5 +1,5 @@
 # dev
-créer le fichier src/hook/config.json à partir de src/hook/config.template
+créer le fichier .env et ajouter VITE_API_BASE_URL=votre_api
 
 ### `yarn dev`
 Runs the app in the development mode.\

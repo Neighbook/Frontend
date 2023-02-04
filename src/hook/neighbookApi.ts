@@ -1,6 +1,6 @@
 import type {AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig} from 'axios';
 import axios from 'axios';
-import config from './config.json';
+import {config} from "../config/api_config";
 
 export const authApi = axios.create({
     baseURL: config.api_base_url + config.auth_route
