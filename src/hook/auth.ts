@@ -33,5 +33,5 @@ export const register = async (prenom: string,
     if(apiRes.status === 200){
         return apiRes.data as string;
     }
-    throw Error('login error');
+    throw Error('register error');
 };
