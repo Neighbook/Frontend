@@ -234,7 +234,7 @@ export default function Register() {
                                     alignItems: 'center'
                                 }}
                             >
-                                <Link to="/login">Se connecter</Link>
+                                <Link to="/login" style={{color: "#64675A"}}>Se connecter</Link>
                                 <Button
                                     type="submit"
                                     variant="contained"

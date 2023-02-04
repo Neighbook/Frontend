@@ -94,7 +94,7 @@ export default function Login() {
                                     alignItems: 'center'
                                 }}
                             >
-                                <Link to="/register">Créer un compte</Link>
+                                <Link to="/register" style={{color: "#64675A"}}>Créer un compte</Link>
                                 <Button
                                     type="submit"
                                     variant="contained"
@@ -109,7 +109,7 @@ export default function Login() {
                     </Box>
                 </Container>
             </Container>
-            <img src={login} alt="logo" className="login-illustration" />
+            <img src={login} alt="logo" className="bottom-illustration" />
         </>
     );
 }
