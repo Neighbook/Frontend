@@ -9,14 +9,13 @@ on:
     branches:
       - dev
       
-env:
-  # Setting an environment variable with the value of a configuration variable
-  env_var: ${{ var.VITE_API_BASE_URL }}
 
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
+    env:
+      VITE_API_BASE_URL: ${{ vars.ENV_CONTEXT_VAR }}
     name: Build and Deploy Job
     steps:
       - uses: actions/checkout@v2
