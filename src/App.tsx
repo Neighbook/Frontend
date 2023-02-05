@@ -1,7 +1,7 @@
 import React from 'react';
 import {
     Routes,
-    Route,
+    Route
 } from 'react-router';
 
 import {
@@ -12,8 +12,9 @@ import {
     Social, Login, Compte, Register
 } from './views';
 
-import {Layout} from './views/Layout';
+import {AuthenticatedLayout} from './views/AuthenticatedLayout';
 import {createTheme, ThemeProvider} from "@mui/material";
+import {AuthProvider} from "./components/AuthProvider";
 
 
 const theme = createTheme({
@@ -37,27 +38,28 @@ const theme = createTheme({
     },
     palette: {
         primary: {main: "#64675A"},
-        secondary: {main: "#879472"},
-        error: {main: "#FFDCDC"}
+        secondary: {main: "#879472"}
     }
 });
 
-const App = () => (
-    <ThemeProvider theme={theme}>
-        <Routes>
-            <Route path="/">
-                <Route index element={<Layout><Acceuil /></Layout>} />
-                <Route path="marketplace" element={<Layout><Marketplace /></Layout>} />
-                <Route path="social" element={<Layout><Social /></Layout>} />
-                <Route path="messagerie" element={<Layout><Messagerie /></Layout>} />
-                <Route path="compte" element={<Layout><Compte /></Layout>} />
-                <Route path="*" element={<PageNotFound />} />
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-            </Route>
-        </Routes>
-    </ThemeProvider>
-);
+const App = () => {
+    return (
+        <ThemeProvider theme={theme}>
+            <AuthProvider>
+                <Routes>
+                    <Route index element={<AuthenticatedLayout><Acceuil /></AuthenticatedLayout>} />
+                    <Route path="marketplace" element={<AuthenticatedLayout><Marketplace /></AuthenticatedLayout>} />
+                    <Route path="social" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
+                    <Route path="messagerie" element={<AuthenticatedLayout><Messagerie /></AuthenticatedLayout>} />
+                    <Route path="compte" element={<AuthenticatedLayout><Compte /></AuthenticatedLayout>} />
+                    <Route path="*" element={<PageNotFound />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="register" element={<Register />} />
+                </Routes>
+            </AuthProvider>
+        </ThemeProvider>
+    );
+};
 
 
 export default App;

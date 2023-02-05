@@ -1,4 +1,4 @@
-.login-illustration{
+.bottom-illustration{
     width: 100%;
     max-height: 40vh;
     position: absolute;
@@ -6,4 +6,5 @@
     bottom: 0;
     object-fit: cover;
     object-position: 0 0;
+    z-index: -1;
 }
