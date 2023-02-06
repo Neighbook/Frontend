@@ -14,6 +14,7 @@ interface Token{
     _user_firstname: string
     _user_lastname: string
     _user_name: string
+    exp: number
 }
 
 interface User{
@@ -86,7 +87,10 @@ export const AuthProvider = ({ children }: Props) => {
 
     const handleLogin = async (email: string, password: string): Promise<void> => {
         const token = await login(email, password);
-        setToken('token', token, { path: '/' });
+        const tokenData = decodeToken(token) as Token;
+        const exp = new Date(0);
+        exp.setUTCSeconds(tokenData.exp);
+        setToken('token', token, { path: '/' , expires: exp});
         const origin = location.state.from.pathname ?? '/';
         navigate(origin);
     };
