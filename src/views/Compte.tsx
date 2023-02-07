@@ -100,7 +100,7 @@ const Compte = () => {
         setFileUrl(null);
         setUserInfo({
             ...userInfo,
-            'photo': ""
+            ['photo']: undefined
         });
     };
 
