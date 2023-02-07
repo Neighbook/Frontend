@@ -7,7 +7,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import logo from '/asset/images/logo.svg';
-import './SideBar.css';
+import '../css/SideBar.css';
 import home from '/asset/images/home.svg';
 import marketplace from '/asset/images/marketplace.svg';
 import social from '/asset/images/social.svg';

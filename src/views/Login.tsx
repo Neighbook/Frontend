@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import logo from "/asset/images/logo.svg";
 import login from "/asset/images/login.svg";
-import './Login.css';
+import '../css/Login.css';
 import {Link} from "react-router-dom";
 import {useState} from "react";
 import {useAuth} from "../components/AuthProvider";
