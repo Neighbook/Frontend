@@ -3,5 +3,5 @@ export const config = {
     auth_route: "/auth",
     user_route: "/user",
     social_route: "/social",
-    file_route: "/file"
+    file_route: "/file",
 };

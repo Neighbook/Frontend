@@ -1,12 +1,12 @@
 import type {ChangeEvent} from 'react';
 import React, { useCallback, useEffect, useRef, useState} from 'react';
-import {Alert, Box, Button, CircularProgress, TextField, Typography} from '@mui/material';
+import {Alert, Box, Button, CircularProgress, Skeleton, TextField, Typography} from '@mui/material';
 import {useAuth} from "../components/AuthProvider";
 import type {User} from "../hook/user";
 import {getUser, updateUser} from "../hook/user";
 import {CompteLoading} from "../components/Loading";
 import '../css/Compte.css';
-import {uploadFile} from "../hook/file";
+import {deleteFile, renewFileUrl, uploadFile} from "../hook/file";
 
 const Compte = () => {
     const {currentUser} = useAuth();
@@ -16,11 +16,10 @@ const Compte = () => {
     const [loading, setLoading] = useState(false);
     const fileRef = useRef<HTMLInputElement | null>(null);
     const [file, setFile] = useState<File | null>(null);
-    const [fileUrl, setFileUrl] = useState<string | null>(null);
+    const [imgUrl, setImgUrl] = useState<string | null>("loading");
 
     const clearForm = () => {
         setEdited(false);
-        setFileUrl(null);
         loadUserInfo();
     };
 
@@ -29,6 +28,13 @@ const Compte = () => {
         if(currentUser) {
             getUser(currentUser.id, controller.signal).then(res => {
                 setUserInfo(res);
+                if(res?.photo !== undefined) {
+                    if(res.photo === "null") {
+                        setImgUrl(null);
+                    }else{
+                        setImgUrl(res.photo);
+                    }
+                }
             }).catch(()=>{
                 controller.abort();
             });
@@ -53,9 +59,13 @@ const Compte = () => {
     const updateUserInfo = async (): Promise<boolean> => {
         if(userInfo) {
             const userData = userInfo;
+            if(imgUrl === null && userInfo.photo !== undefined && userInfo.photo !== "null"){
+                await deleteFile(userInfo.photo);
+                userData.photo = "null";
+            }
             if (file) {
                 let filename = currentUser?.id ?? '';
-                filename += "_pfp";
+                filename += "_pfp.";
                 filename += file.name.split('.').pop();
                 userData.photo = await uploadFile(filename, file);
                 setUserInfo(userData);
@@ -84,6 +94,19 @@ const Compte = () => {
         fileRef.current?.click();
     };
 
+    const handleImgError = (error: React.SyntheticEvent<HTMLImageElement, Event>) => {
+        renewFileUrl(error.currentTarget.src).then(fileUrl=>{
+            setImgUrl(fileUrl);
+            if(userInfo) {
+                const userData = userInfo;
+                userInfo.photo = fileUrl;
+                updateUser(userData).then(()=>null).catch(()=>null);
+            }
+        }).catch(()=> {
+            setImgUrl(null);
+        });
+    };
+
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) {
             return;
@@ -91,17 +114,13 @@ const Compte = () => {
         const file = e.target.files[0];
         e.target.value = "";
         setFile(file);
-        setFileUrl(URL.createObjectURL(file));
+        setImgUrl(URL.createObjectURL(file));
         setEdited(true);
     };
 
     const handleDelete = () => {
         setEdited(true);
-        setFileUrl(null);
-        setUserInfo({
-            ...userInfo,
-            ['photo']: undefined
-        });
+        setImgUrl(null);
     };
 
     if(!userInfo){
@@ -115,13 +134,16 @@ const Compte = () => {
                 Gérer les paramètres de votre profil.
             </Typography>
             <Box mt={5} ml={2} sx={{ display: 'flex', alignItems: 'center' }}>
-                <img src={fileUrl ??
-                        userInfo.photo ??
+                {imgUrl === "loading"?
+                    <Skeleton variant="circular" sx={{width: "20vh", height: "20vh", minHeight: "200px", minWidth: "200px", aspectRatio: "1/1"}}/>
+                    :
+                    <img src={imgUrl ??
                         "https://cdn-icons-png.flaticon.com/512/4193/4193310.png"}
-                className="pfp"
-                style={{aspectRatio:'1/1', objectFit: 'cover'}}
-                alt="profile"
-                />
+                    className="pfp"
+                    style={{aspectRatio:'1/1', objectFit: 'cover'}}
+                    alt="profile"
+                    onError={handleImgError}
+                    />}
                 <input
                     style={{ display: 'none' }}
                     ref={fileRef}
