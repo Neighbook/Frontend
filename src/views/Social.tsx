@@ -1,10 +1,18 @@
 import React from 'react';
-import { Typography } from '@mui/material';
-
+import {Box, Typography} from '@mui/material';
+import { SocialPost } from '../components/SocialPost';
 const Social = () => (
-    <Typography variant="h1">
-        Social
-    </Typography>
+    <Box
+        ml={10}
+        mr={10}
+        sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+        }}
+    >
+        <SocialPost/>
+    </Box>
 );
 
 export default Social;
