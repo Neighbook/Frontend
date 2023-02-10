@@ -27,6 +27,14 @@ export const getUser = async (user_id: string, signal: GenericAbortSignal): Prom
     return null;
 };
 
+export const getUsers = async (signal: GenericAbortSignal): Promise<Array<User>> => {
+    const apiRes = await userApi.get("", {signal: signal, baseURL: userApi.getUri()+"s"});
+    if(apiRes.status === 200){
+        return apiRes.data as Array<User>;
+    }
+    return [];
+};
+
 export const updateUser = async (user: User): Promise<boolean> => {
     const apiRes = await userApi.put('',user);
     return apiRes.status === 200;
