@@ -48,8 +48,8 @@ const App = () => {
             <AuthProvider>
                 <Routes>
                     <Route index element={<AuthenticatedLayout><Acceuil /></AuthenticatedLayout>} />
-                    <Route path="marketplace" element={<AuthenticatedLayout><Marketplace /></AuthenticatedLayout>} />
-                    <Route path="social" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
+                    <Route path="marketplace" element={<Marketplace />} />
+                    <Route path="social" element={<Social />} />
                     <Route path="messagerie" element={<AuthenticatedLayout><Messagerie /></AuthenticatedLayout>} />
                     <Route path="compte" element={<AuthenticatedLayout><Compte /></AuthenticatedLayout>} />
                     <Route path="*" element={<PageNotFound />} />
