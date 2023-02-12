@@ -39,7 +39,7 @@ const Social = () => {
             <Fade in={imgModal !== null}>
                 <img
                     src={imgModal ?? ""}
-                    alt="asd"
+                    alt="modal"
                     style={{ maxHeight: "90%", maxWidth: "90%", outline: "none" }}
                 />
             </Fade>

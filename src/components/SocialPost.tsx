@@ -48,13 +48,13 @@ export const SocialPost = ({post, sx, setImgModal}: props) => {
                 subheader={relativeDay === 0 ? dateFormatter.format(relativeHour, 'hours') : dateFormatter.format(relativeDay, 'day')}
             />
             {post.images.length>0&&<CardMedia>
-                <ImageList sx={{ ml: 2, mr: 2}} cols={post.images.length===1?1:2}>
-                    {post.images.map((image) => (
-                        <ImageListItem key={image.id}>
+                <ImageList sx={{ ml: 2, mr: 2}} cols={post.images.length===1?1:2} rowHeight={170}>
+                    {post.images.map((image, index) => (
+                        <ImageListItem key={image.id} rows={index===0&&post.images.length%2!==0?2:1}>
                             <img
                                 alt='post'
                                 src={image.url}
-                                style={{borderRadius: '10px', maxHeight: post.images.length===1?"20em":"10em", objectFit: "cover"}}
+                                style={{borderRadius: '10px', height:"100%", objectFit: "cover"}}
                                 loading="lazy"
                                 onClick={()=> {
                                     setImgModal(image.url);
