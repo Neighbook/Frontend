@@ -18,6 +18,7 @@ import SendIcon from '@mui/icons-material/Send';
 import {createRef, useEffect, useState} from "react";
 import {deleteComment, postComment} from "../hook/social";
 import {CommentLoading} from "../components/Loading";
+import {relativeDateComment} from "../utils/Date";
 interface props{
     post: Post
 }
@@ -26,11 +27,6 @@ interface CommentProps{
     commentaire: Commentaire
     subcomment?: boolean
 }
-
-const dateFormatter = new Intl.RelativeTimeFormat('fr-FR', {
-    numeric: 'always',
-    style: 'long'
-});
 
 export const PostComments = ({post}:props) => {
     const {currentUser, usersBase} = useAuth();
@@ -64,9 +60,6 @@ export const PostComments = ({post}:props) => {
 
     const Comment = ({commentaire, subcomment= false}:CommentProps) => {
         const author = usersBase?.find(user=>user.id === commentaire.idUtilisateur);
-        const relativeDate = new Date(commentaire.dateDeCreation).getTime() - Date.now();
-        const relativeHour = Math.trunc(relativeDate/3600000);
-        const relativeDay = Math.trunc(relativeHour/24);
         const subcomments = localCommentaires.filter(c=>c.idCommentaire===commentaire.id);
         return(
             <>
@@ -95,7 +88,7 @@ export const PostComments = ({post}:props) => {
                                     variant="body2"
                                     color="text.secondary"
                                 >
-                                    {" — " + (relativeDay === 0 ? dateFormatter.format(relativeHour, 'hours') : dateFormatter.format(relativeDay, 'day'))}
+                                    {" — " + relativeDateComment(new Date(commentaire.dateDeCreation))}
                                 </Typography>
                             </Box>
                             <Box>

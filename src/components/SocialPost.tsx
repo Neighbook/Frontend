@@ -23,17 +23,13 @@ import {useNavigate} from "react-router";
 import {useState} from "react";
 import {updateReaction} from "../hook/social";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import {relativeDateComment} from "../utils/Date";
 
 interface props{
     post: Post
     sx: {}
     fullSize?: boolean
 }
-
-const dateFormatter = new Intl.RelativeTimeFormat('fr-FR', {
-    numeric: 'always',
-    style: 'long'
-});
 
 export const SocialPost = ({post, sx, fullSize=false}: props) => {
     const {usersBase} = useAuth();
@@ -44,9 +40,6 @@ export const SocialPost = ({post, sx, fullSize=false}: props) => {
     const [nombreReactions, setNombreReactions] = React.useState<NombreReactions>(post.nombreReactions);
     const [reactionUtilisateur, setReactionUtilisateur] = React.useState<Number|null>(post.reactionUtilisateur);
     const author = usersBase?.find(user=>user.id === post.idUtilisateur);
-    const relativeDate = new Date(post.dateDeCreation).getTime() - Date.now();
-    const relativeHour = Math.trunc(relativeDate/3600000);
-    const relativeDay = Math.trunc(relativeHour/24);
 
     const setUserReaction = (newReaction: number) => {
         const remove = newReaction === reactionUtilisateur;
@@ -114,7 +107,7 @@ export const SocialPost = ({post, sx, fullSize=false}: props) => {
                     </>
                 }
                 title={post.titre}
-                subheader={relativeDay === 0 ? dateFormatter.format(relativeHour, 'hours') : dateFormatter.format(relativeDay, 'day')}
+                subheader={relativeDateComment(new Date(post.dateDeCreation))}
             />
             {post.images.length>0&&<CardMedia>
                 <ImageList sx={{ ml: 2, mr: 2}} cols={post.images.length===1?1:2} rowHeight={12 * parseFloat(getComputedStyle(document.documentElement).fontSize)}>
