@@ -20,6 +20,7 @@ import defaultPfp from "/asset/images/pfp.png";
 interface props{
     post: Post
     sx: {}
+    setImgModal: Function
 }
 
 const dateFormatter = new Intl.RelativeTimeFormat('fr-FR', {
@@ -27,11 +28,11 @@ const dateFormatter = new Intl.RelativeTimeFormat('fr-FR', {
     style: 'long'
 });
 
-export const SocialPost = ({post, sx}: props) => {
+export const SocialPost = ({post, sx, setImgModal}: props) => {
     const {usersBase} = useAuth();
     const author = (usersBase?.find(user=>user.id === post.idUtilisateur)?.photo) ?? defaultPfp;
-    const relativeDay = new Date(post.dateDeCreation).getDay() - new Date().getDay();
-    const relativeHour = new Date(post.dateDeModification).getHours() - new Date().getHours();
+    const relativeDay = new Date().getDay() - new Date(post.dateDeCreation).getDay();
+    const relativeHour = new Date().getHours() - new Date(post.dateDeModification).getHours();
     return (
         <Card sx={{boxShadow: '10', borderRadius: '10px', width: '100%', ...sx}}>
             <CardHeader
@@ -47,13 +48,17 @@ export const SocialPost = ({post, sx}: props) => {
                 subheader={relativeDay === 0 ? dateFormatter.format(relativeHour, 'hours') : dateFormatter.format(relativeDay, 'day')}
             />
             {post.images.length>0&&<CardMedia>
-                <ImageList sx={{ width: "90%", marginLeft: '5%', borderRadius: '10px' }} cols={2}>
+                <ImageList sx={{ ml: 2, mr: 2}} cols={post.images.length===1?1:2}>
                     {post.images.map((image) => (
                         <ImageListItem key={image.id}>
                             <img
                                 alt='post'
                                 src={image.url}
+                                style={{borderRadius: '10px', maxHeight: post.images.length===1?"20em":"10em", objectFit: "cover"}}
                                 loading="lazy"
+                                onClick={()=> {
+                                    setImgModal(image.url);
+                                }}
                             />
                         </ImageListItem>
                     ))}
