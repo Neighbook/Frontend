@@ -1,4 +1,4 @@
-import {userApi} from "./neighbookApi";
+import {userApi, usersApi} from "./neighbookApi";
 import type {GenericAbortSignal} from "axios";
 
 export interface User{
