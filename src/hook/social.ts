@@ -10,7 +10,7 @@ export interface Commentaire{
     id: string
     idUtilisateur: string
     contenu: string
-    idCommentaire?: string
+    idCommentaire: string | null
     dateDeCreation: string
 }
 

@@ -164,7 +164,7 @@ export const PostComments = ({post}:props) => {
             </IconButton>
         </Box>
         <List sx={{ bgcolor: 'background.paper', mr: 4 }}>
-            {post.commentaires?localCommentaires.filter(commentaire=>commentaire.idCommentaire !== undefined).map(commentaire=><Comment commentaire={commentaire} key={commentaire.id}/>):<CommentLoading ncommentaire={post.ncommentaires}/>}
+            {post.commentaires?localCommentaires.filter(commentaire=>commentaire.idCommentaire === null).map(commentaire=><Comment commentaire={commentaire} key={commentaire.id}/>):<CommentLoading ncommentaire={post.ncommentaires}/>}
         </List>
     </>);
 };
