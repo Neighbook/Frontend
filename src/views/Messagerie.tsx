@@ -9,13 +9,23 @@ import io, { type Socket } from "socket.io-client";
 import ChatRoom from '../components/ChatRoom';
 import type { ClientToServerEvents, ServerToClientEvents } from "../models/Socket";
 
+interface Message {
+    sender: string;
+    message: string;
+}
+
 const Messagerie = () => {
     const {currentUser} = useAuth();
     const [chattingWith, setChatWith] = useState<User|null>(null);
     const [friends, setFriends] = useState<User[]>([]);
-    const [message, setMessage] = useState<string>("");
+    const [messages, _setMessages] = useState<Array<Message>>([]);
+    const _messages = useRef<Array<Message>>([]);
+    const setMessages = (data: Array<Message>) => {
+        _messages.current = data;
+        _setMessages(data);
+    };
+
     const [roomId, setRoomId] = useState<string>("");
-    const [isLoading, setisLoading] = useState<Boolean>(true);
 
     const socket = useRef<Socket<ServerToClientEvents, ClientToServerEvents> | null>(null);
 
@@ -25,9 +35,12 @@ const Messagerie = () => {
                 transports: ["websocket"],
             });
             socket.current.on("connect", () => {
-                // getUsers().then(list => console.log(list)).catch(e => console.log(e));
-                setFriends(FRIENDS);
-                startChattingWith(FRIENDS[0]);
+                getUsers().then(list => {
+                    if(list && list.length) {
+                        setFriends(list);
+                        startChattingWith(list[0]);
+                    }
+                }).catch(e => console.log(e));
             });
 
             socket.current.on("disconnect", () => {
@@ -39,8 +52,9 @@ const Messagerie = () => {
             });
 
             socket.current.on("messageReceived", (data) => {
-                console.log(data);
-                setMessage(data.message);
+                if(data) {
+                    setMessages([..._messages.current, { sender: 'him', message: data.message }]);
+                }
             });
             // socket.current.onAny((event, ...args) => {
             //     console.log(event, args);
@@ -69,6 +83,7 @@ const Messagerie = () => {
 
     const sendMessage = (msg: string) => {
         if(socket.current) {
+            setMessages([...messages, { sender: 'me', message: msg}]);
             socket.current.emit("messageSended", {
                 roomId: roomId,
                 message: msg
@@ -83,11 +98,11 @@ const Messagerie = () => {
                     chattingWith &&
                     <>
                         <ChatProfile photo={chattingWith.photo} nom={chattingWith.nom} prenom={chattingWith.prenom} />
-                        <ChatRoom sendMessage={sendMessage} me={chattingWith} receiver={chattingWith} messages={[]} />
+                        <ChatRoom sendMessage={sendMessage} receiver={chattingWith} messages={messages} />
                     </>
                 }
             </Box>
-            <PermanentDrawerRight onSelect={startChattingWith} friends={FRIENDS} />
+            <PermanentDrawerRight onSelect={startChattingWith} friends={friends} />
         </Container>
     );
 };
