@@ -53,6 +53,7 @@ const App = () => {
                     <Route path="messagerie" element={<AuthenticatedLayout><Messagerie /></AuthenticatedLayout>} />
                     <Route path="compte" element={<AuthenticatedLayout><Compte /></AuthenticatedLayout>} />
                     <Route path="user/:userId" element={<AuthenticatedLayout><UserView /></AuthenticatedLayout>} />
+                    <Route path="post/:postId" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
                     <Route path="*" element={<PageNotFound />} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />

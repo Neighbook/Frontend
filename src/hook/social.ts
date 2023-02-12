@@ -6,6 +6,23 @@ interface Image{
     url: string
 }
 
+export interface Commentaire{
+    id: string
+    idUtilisateur: string
+    contenu: string
+    idCommentaire?: string
+}
+
+export interface NombreReactions{
+    like: number
+    mdr: number
+    Oo: number
+    snif: number
+    grr: number
+    ok: number
+}
+
+
 export interface Post{
     id: string
     titre: string
@@ -14,19 +31,12 @@ export interface Post{
     idUtilisateur: string
     dateDeCreation: Date
     dateDeModification: Date
-    commentaires: []
+    commentaires: Array<Commentaire>
     ncommentaires: number
     reactionUtilisateur: number
     images: Array<Image>
     evenement: {}
-    nombreReactions: {
-        like: number
-        mdr: number
-        Oo: number
-        snif: number
-        grr: number
-        ok: number
-    }
+    nombreReactions: NombreReactions
 }
 
 export const getFeed = async (signal: GenericAbortSignal): Promise<Array<Post> | null> => {
@@ -35,4 +45,16 @@ export const getFeed = async (signal: GenericAbortSignal): Promise<Array<Post> |
         return apiRes.data as Array<Post>;
     }
     return null;
+};
+
+export const getPost = async (id: string, signal: GenericAbortSignal): Promise<Post | null> => {
+    const apiRes = await socialApi.get("post", {signal: signal, params:{id}});
+    if(apiRes.status === 200){
+        return apiRes.data as Post;
+    }
+    return null;
+};
+
+export const updateReaction = async (reactionId: number | null, postId: string): Promise<void> => {
+    await socialApi.patch("reaction", {reactionId, postId});
 };
