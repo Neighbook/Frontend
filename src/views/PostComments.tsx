@@ -25,7 +25,6 @@ interface props{
 
 interface CommentProps{
     commentaire: Commentaire
-    subcomment?: boolean
 }
 
 export const PostComments = ({post}:props) => {
@@ -58,9 +57,10 @@ export const PostComments = ({post}:props) => {
         }
     };
 
-    const Comment = ({commentaire, subcomment= false}:CommentProps) => {
+    const Comment = ({commentaire}:CommentProps) => {
         const author = usersBase?.find(user=>user.id === commentaire.idUtilisateur);
         const subcomments = localCommentaires.filter(c=>c.idCommentaire===commentaire.id);
+        const reponseId = commentaire.idCommentaire ?? commentaire.id;
         return(
             <>
                 <ListItem alignItems="flex-start">
@@ -100,14 +100,14 @@ export const PostComments = ({post}:props) => {
                                 >
                                     supprimer
                                 </Typography>:
-                                    (!subcomment&&<Typography
+                                    <Typography
                                         component="span"
                                         variant="body2"
                                         color="secondary"
-                                        onClick={()=>{setResponseToId(commentaire.id === responseToId ? "" : commentaire.id);}}
+                                        onClick={()=>{setResponseToId(reponseId === responseToId ? "" : reponseId);}}
                                     >
                                         {commentaire.id === responseToId ? "annuler" : "repondre"}
-                                    </Typography>)
+                                    </Typography>
                                 }
                             </Box>
                         </Box>
@@ -132,7 +132,7 @@ export const PostComments = ({post}:props) => {
                     </IconButton>
                 </ListItem>}
                 <List sx={{ ml: 5 }}>
-                    {subcomments.map(c=><Comment commentaire={c} key={c.id} subcomment={true}/>)}
+                    {subcomments.map(c=><Comment commentaire={c} key={c.id}/>)}
                 </List>
             </>
         );
