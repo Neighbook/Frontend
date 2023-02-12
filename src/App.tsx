@@ -15,7 +15,6 @@ import {
 import {AuthenticatedLayout} from './views/AuthenticatedLayout';
 import {createTheme, ThemeProvider} from "@mui/material";
 import {AuthProvider} from "./components/AuthProvider";
-import { WebSocketMessagerie } from './views/WebSocketMessagerie';
 
 
 const theme = createTheme({
@@ -51,7 +50,7 @@ const App = () => {
                     <Route index element={<AuthenticatedLayout><Acceuil /></AuthenticatedLayout>} />
                     <Route path="marketplace" element={<AuthenticatedLayout><Marketplace /></AuthenticatedLayout>} />
                     <Route path="social" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
-                    <Route path="messagerie" element={<><WebSocketMessagerie /></>} />
+                    <Route path="messagerie" element={<AuthenticatedLayout><Messagerie /></AuthenticatedLayout>} />
                     <Route path="compte" element={<AuthenticatedLayout><Compte /></AuthenticatedLayout>} />
                     <Route path="*" element={<PageNotFound />} />
                     <Route path="login" element={<Login />} />

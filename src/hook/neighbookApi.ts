@@ -42,4 +42,5 @@ class authenticatedApi {
 
 export const neighbookApi = new authenticatedApi();
 export const userApi = neighbookApi.getInstance(config.user_route);
+export const usersApi = neighbookApi.getInstance(config.users_route);
 export const fileApi = neighbookApi.getInstance(config.file_route);

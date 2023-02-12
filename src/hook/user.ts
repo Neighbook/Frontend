@@ -1,4 +1,4 @@
-import {userApi} from "./neighbookApi";
+import {userApi, usersApi} from "./neighbookApi";
 import type {GenericAbortSignal} from "axios";
 
 export interface User{
@@ -23,6 +23,14 @@ export const getUser = async (user_id: string, signal: GenericAbortSignal): Prom
     const apiRes = await userApi.get(user_id, {signal: signal});
     if(apiRes.status === 200){
         return apiRes.data as User;
+    }
+    return null;
+};
+
+export const getUsers = async (): Promise<Array<User> | null> => {
+    const apiRes = await usersApi.get('');
+    if(apiRes.status === 200) {
+        return apiRes.data as User[];
     }
     return null;
 };
