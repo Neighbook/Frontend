@@ -15,6 +15,7 @@ import {
 import {AuthenticatedLayout} from './views/AuthenticatedLayout';
 import {createTheme, ThemeProvider} from "@mui/material";
 import {AuthProvider} from "./components/AuthProvider";
+import { WebSocketMessagerie } from './views/WebSocketMessagerie';
 
 
 const theme = createTheme({
