@@ -22,6 +22,7 @@ import defaultPfp from "/asset/images/pfp.png";
 import {useNavigate} from "react-router";
 import {useState} from "react";
 import {updateReaction} from "../hook/social";
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 interface props{
     post: Post
@@ -43,8 +44,9 @@ export const SocialPost = ({post, sx, fullSize=false}: props) => {
     const [nombreReactions, setNombreReactions] = React.useState<NombreReactions>(post.nombreReactions);
     const [reactionUtilisateur, setReactionUtilisateur] = React.useState<Number|null>(post.reactionUtilisateur);
     const author = usersBase?.find(user=>user.id === post.idUtilisateur);
-    const relativeDay = new Date().getDay() - new Date(post.dateDeCreation).getDay();
-    const relativeHour = new Date().getHours() - new Date(post.dateDeModification).getHours();
+    const relativeDate = new Date(post.dateDeCreation).getTime() - Date.now();
+    const relativeHour = Math.trunc(relativeDate/3600000);
+    const relativeDay = Math.trunc(relativeHour/24);
 
     const setUserReaction = (newReaction: number) => {
         const remove = newReaction === reactionUtilisateur;
@@ -100,9 +102,16 @@ export const SocialPost = ({post, sx, fullSize=false}: props) => {
                     />
                 }
                 action={
-                    <IconButton aria-label="share">
-                        <ShareIcon />
-                    </IconButton>
+                    <>
+                        {fullSize&&<IconButton onClick={() => {
+                            navigate("/social");
+                        }}>
+                            <ArrowBackIosNewIcon/>
+                        </IconButton>}
+                        <IconButton aria-label="share">
+                            <ShareIcon />
+                        </IconButton>
+                    </>
                 }
                 title={post.titre}
                 subheader={relativeDay === 0 ? dateFormatter.format(relativeHour, 'hours') : dateFormatter.format(relativeDay, 'day')}
@@ -125,7 +134,7 @@ export const SocialPost = ({post, sx, fullSize=false}: props) => {
                     ))}
                 </ImageList>
             </CardMedia>}
-            <CardContent>
+            <CardContent onClick={() => { navigate(`/post/${post.id}`); }} sx={{'&:hover': {cursor: "pointer"}}}>
                 <Typography variant="body2" color="text.secondary">
                     {post.description}
                 </Typography>

@@ -6,6 +6,7 @@ import {getFeed, getPost} from "../hook/social";
 import InfiniteScroll from 'react-infinite-scroller';
 import {useParams} from "react-router";
 import {PostComments} from "./PostComments";
+import {FeedLoading} from "../components/Loading";
 
 
 const Social = () => {
@@ -27,6 +28,7 @@ const Social = () => {
 
     useEffect(() => {
         const controller = new AbortController();
+        setPost(null);
         if(postId !== "" && postId !== undefined && feed){
             setPost(feed.find(post=>post.id===postId) ?? null);
             getPost(postId, controller.signal).then(p=>{ setPost(p); }).catch(()=>null);
@@ -45,10 +47,6 @@ const Social = () => {
         }
     };
 
-    if (feed === null) {
-        return <p>loading</p>;
-    }
-
     const renderPosts = (data: Array<Post>) => {
         const items = [];
         let post;
@@ -59,33 +57,35 @@ const Social = () => {
         return items;
     };
 
-    if(postId !== "" && postId !== undefined && post){
+    const renderPost = (post: Post) => {
         return (
             <>
-                <SocialPost post={post} sx={{}} fullSize/>
-                <PostComments commentaires={post.commentaires}/>
+                <SocialPost post={post} sx={{mb: 2}} fullSize/>
+                <PostComments post={post}/>
             </>
         );
-    }
+    };
 
-    return (<Container component="main" maxWidth="md">
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}
-        >
-            <InfiniteScroll
-                pageStart={0}
-                loadMore={loadMore}
-                hasMore={hasMore}
-                loader={<div className="loader" key={0}>Loading ...</div>}
+    return (
+        <Container component="main" maxWidth="md">
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
             >
-                {renderPosts(feed)}
-            </InfiniteScroll>
-        </Box>
-    </Container>);
+                {feed?<InfiniteScroll
+                    pageStart={0}
+                    loadMore={loadMore}
+                    hasMore={hasMore}
+                    style={{width: "100%"}}
+                    loader={<div className="loader" key={0}>Loading ...</div>}
+                >
+                    {post?renderPost(post):renderPosts(feed)}
+                </InfiniteScroll>:<FeedLoading/>}
+            </Box>
+        </Container>);
 };
 
 export default Social;

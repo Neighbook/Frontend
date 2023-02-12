@@ -11,6 +11,7 @@ export interface Commentaire{
     idUtilisateur: string
     contenu: string
     idCommentaire?: string
+    dateDeCreation: string
 }
 
 export interface NombreReactions{
@@ -31,7 +32,7 @@ export interface Post{
     idUtilisateur: string
     dateDeCreation: Date
     dateDeModification: Date
-    commentaires: Array<Commentaire>
+    commentaires?: Array<Commentaire>
     ncommentaires: number
     reactionUtilisateur: number
     images: Array<Image>
@@ -53,6 +54,22 @@ export const getPost = async (id: string, signal: GenericAbortSignal): Promise<P
         return apiRes.data as Post;
     }
     return null;
+};
+
+export const postComment = async (idPost: string, contenu: string, idCommentaire: string | null): Promise<Commentaire> => {
+    const apiRes = await socialApi.post("comment", {idPost, contenu, idCommentaire});
+    if(apiRes.status === 200){
+        return apiRes.data as Commentaire;
+    }
+    throw Error('impossible de commenter');
+};
+
+export const deleteComment = async (id: string): Promise<void> => {
+    const apiRes = await socialApi.delete("comment", {params:{id}});
+    if(apiRes.status === 200){
+        return;
+    }
+    throw Error('impossible de supprimer');
 };
 
 export const updateReaction = async (reactionId: number | null, postId: string): Promise<void> => {

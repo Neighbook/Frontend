@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import {Skeleton} from "@mui/material";
+import {ListItem, ListItemAvatar, ListItemText, Skeleton, Typography} from "@mui/material";
 
 export const CompteLoading = () => (
     <Box ml={5} mr={5}>
@@ -21,3 +21,42 @@ export const UserLoading = () => (
         <Skeleton variant="circular" sx={{width: "20vh", height: "20vh", minHeight: "200px", minWidth: "200px", mb: 10, ml: 2, aspectRatio: "1/1"}}/>
     </Box>
 );
+
+export const FeedLoading = () => (
+    <Box>
+        <Skeleton variant="rectangular" sx={{width:"650px", height: "12rem", mb: 3}} />
+        <Skeleton variant="rectangular" sx={{width:"650px", height: "30rem", mb: 3}} />
+        <Skeleton variant="rectangular" sx={{width:"650px", height: "30rem", mb: 3}} />
+        <Skeleton variant="rectangular" sx={{width:"650px", height: "12rem", mb: 3}} />
+    </Box>
+);
+
+interface CommentLoadingProps{
+    ncommentaire: number
+}
+export const CommentLoading = ({ncommentaire}: CommentLoadingProps) => {
+    const res = [];
+    for (let i = 0; i < ncommentaire; i++) {
+        res.push(<ListItem alignItems="flex-start" key={`laodingcom${i}`}>
+            <ListItemAvatar>
+                <Skeleton variant="circular" sx={{width: "50px", height: "50px"}}/>
+            </ListItemAvatar>
+            <Box sx={{width: "100%"}}>
+                <ListItemText
+                    primary={<Skeleton/>}
+                />
+                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                    <Box>
+                        <Typography>
+                            <Skeleton width={100}/>
+                        </Typography>
+                    </Box>
+                    <Box>
+                        <Skeleton width={40}/>
+                    </Box>
+                </Box>
+            </Box>
+        </ListItem>);
+    }
+    return <>{res}</>;
+};
