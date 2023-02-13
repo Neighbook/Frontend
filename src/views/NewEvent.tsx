@@ -1,200 +1,177 @@
-import React, { ChangeEvent, useRef, useState } from "react";
-import Backdrop from "@mui/material/Backdrop";
+import React, {ChangeEvent, useRef, useState} from "react";
 import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
-import { Container, TextField, CircularProgress } from "@mui/material";
-import { addPost } from "../hook/social";
+import {Container, TextField, styled, Grid, LinearProgress} from "@mui/material";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import IconButton from '@mui/material/IconButton';
+import {addPost, addPostImage} from "../hook/social";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
-interface Post {
-  title: string;
-  description: string;
+
+interface Post{
+    titre: string
+    description: string
 }
 
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 500,
-  bgcolor: "background.paper",
-  border: "1px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+interface props{
+  open: boolean
+  handleClose: Function
+}
 
-export default function NewEvent(props: any) {
-  const [formData, updateFormData] = React.useState<Post>({
-    title: "",
-    description: "",
-  });
-  const [loading, setLoading] = React.useState(false);
-  const fileRef = useRef<HTMLInputElement | null>(null);
-  const [file, setFile] = useState<File | null>(null);
-  const [imgUrl, setImgUrl] = useState<string | null>("loading");
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    '& .MuiDialogContent-root': {
+        padding: theme.spacing(2),
+    },
+    '& .MuiDialogActions-root': {
+        padding: theme.spacing(1),
+    },
+}));
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    addPost(formData.title, formData.description)
-      .then((res) => console.log(res))
-      .catch((err) => {
-        setLoading(false);
-        console.log(err);
-      });
-  };
-
-  const handleFormChange = (event: React.ChangeEvent<HTMLFormElement>) => {
-    updateFormData({
-      ...formData,
-      [event.target.name]: event.target.value as string,
+export const NewEvent = ({open, handleClose}: props) => {
+    const [formData, updateFormData] = React.useState<Post>({
+        titre: "",
+        description: "",
     });
-  };
+    const [loading, setLoading] = useState<number>(-1);
+    const fileRef = useRef<Array<(HTMLInputElement | null)>>(Array(4));
+    const [files, setFiles] = useState<Array<(File | null)>>([null, null, null, null]);
+    const [imgUrls, setImgUrls] = useState<Array<string>>(["", "", "", ""]);
 
-  const handleUploadClick = () => {
-    fileRef.current?.click();
-  };
+    const handleSubmit = () => {
+        setLoading(0);
+        addPost(formData.titre, formData.description)
+            .then((post) => {
+                Promise.all(files.map((file)=>{
+                    if(file) {
+                        return addPostImage(post.id, file).then(()=>setLoading(loading+1));
+                    }
+                    return null;
+                })).then(()=>{
+                    setFiles([null, null, null, null]);
+                    setImgUrls(["", "", "", ""]);
+                    setLoading(-1);
+                    fileRef.current.forEach(c=>{
+                        if(c?.value){
+                            c.value="";
+                        }
+                    });
+                    handleClose();
+                }).catch(()=>null);
+            })
+            .catch((err) => {
+                setLoading(-1);
+                console.log(err);
+            });
+    };
 
-  const handleFileChange = (e: any) => {
-    if (!e.target.files) {
-      return;
-    }
-    const file = e.target.files[0];
-    e.target.value = "";
-    setFile(file);
-    setImgUrl(URL.createObjectURL(file));
-  };
+    const handleFormChange = (event: React.ChangeEvent<HTMLFormElement>) => {
+        updateFormData({
+            ...formData,
+            [event.target.name]: event.target.value as string,
+        });
+    };
 
-  return (
-    <div>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={props.open}
-        onClose={props.close}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={props.open}>
-          <Box sx={style}>
-            <Button
-              sx={{ position: "absolute", top: 10, right: 10 }}
-              onClick={props.onClose}
-            >
-              <CloseIcon />
-            </Button>
-            <Container component="main" maxWidth="md">
-              <Typography
-                component="h1"
-                variant="h4"
-                sx={{ textAlign: "center", marginTop: "10vh", fontWeight: 700 }}
-              >
+    const handleUploadClick = (index: number) => {
+        fileRef.current[index]?.click();
+    };
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+        if (!e.target.files) {
+            return;
+        }
+        const file = e.target.files[0];
+        e.target.value = "";
+        const filesCopy = [...files];
+        filesCopy[index] = file;
+        setFiles(filesCopy);
+        const urlsCopy = [...imgUrls];
+        urlsCopy[index] = URL.createObjectURL(file);
+        setImgUrls(urlsCopy);
+    };
+
+    return (
+        <BootstrapDialog
+            onClose={()=>{handleClose();}}
+            open={open}
+        >
+            <DialogTitle sx={{ m: 0, p: 2 }}>
                 Nouvelle publication
-              </Typography>
-              <Container component="main" maxWidth="xs">
-                <Box
-                  sx={{
-                    marginTop: "5vh",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
+                <IconButton
+                    aria-label="close"
+                    onClick={()=>{handleClose();}}
+                    sx={{
+                        position: 'absolute',
+                        right: 8,
+                        top: 8,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
                 >
-                  <Box
-                    component="form"
-                    onSubmit={handleSubmit}
-                    onChange={handleFormChange}
-                    sx={{ mt: 1 }}
-                  >
-                    <TextField
-                      name="title"
-                      margin="normal"
-                      required
-                      fullWidth
-                      label="Titre"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      variant="standard"
-                    />
-                    <TextField
-                      name="description"
-                      margin="normal"
-                      multiline
-                      minRows={1}
-                      maxRows={4}
-                      fullWidth
-                      label="Description"
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      variant="standard"
-                    />
-                    <div>
-                      <input
-                        name="image"
-                        onChange={handleFileChange}
-                        style={{ display: "none" }}
-                        type="file"
-                        ref={fileRef}
-                      />
-                      <Button
-                        type="button"
-                        variant="contained"
-                        color="secondary"
-                        size="large"
-                        sx={{ borderRadius: 1, mb: 2, justifyContent: "left" }}
-                        onClick={handleUploadClick}
-                      >
-                        <b>Ajouter une photo</b>
-                      </Button>
-                      <label>//Afficher le nom de la photo {}</label>
-                    </div>
+                    <CloseIcon />
+                </IconButton>
+            </DialogTitle>
+            <DialogContent dividers>
+                <Container component="main" maxWidth="md">
                     <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            width: "100%"
+                        }}
                     >
-                      <Box sx={{ position: "relative" }}>
-                        <Button
-                          type="submit"
-                          variant="contained"
-                          color="secondary"
-                          size="large"
-                          disabled={loading}
-                          sx={{ mt: 3, mb: 2, borderRadius: 1 }}
-                        >
-                          Publier
-                        </Button>
-                        {loading && (
-                          <CircularProgress
-                            size="30px"
-                            sx={{
-                              position: "absolute",
-                              top: "50%",
-                              left: "50%",
-                              marginTop: "-12px",
-                              marginLeft: "-15px",
-                            }}
-                          />
-                        )}
-                      </Box>
+                        <Box component="form" onChange={handleFormChange}>
+                            <TextField
+                                name="titre"
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="Titre"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                variant="standard"
+                            />
+                            <TextField
+                                name="description"
+                                margin="normal"
+                                multiline
+                                rows={4}
+                                fullWidth
+                                label="Description"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                variant="standard"
+                                sx={{mb: 3}}
+                            />
+                            <Grid container rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                                {imgUrls.map((img, i)=><Grid item xs={6} key={`img${i}`}>
+                                    <Box sx={{display: "flex", alignItems: 'center', justifyContent: 'center', outline: "dashed #00000036 0.15em", height: "6rem"}} onClick={()=>{handleUploadClick(i);}}>
+                                        {img?<img src={img} style={{height: "100%", width: "100%", objectFit: 'cover'}}/>:<AddPhotoAlternateIcon/>}
+                                        <input
+                                            name="image"
+                                            onChange={(e)=>handleFileChange(e, i)}
+                                            style={{ display: "none" }}
+                                            type="file"
+                                            ref={e=>fileRef.current[i]=e}
+                                        />
+                                    </Box>
+                                </Grid>)}
+                            </Grid>
+                            {loading!==-1&&<LinearProgress variant={loading?"determinate":"indeterminate"} value={loading*25} sx={{mt: 2}}/>}
+                        </Box>
                     </Box>
-                  </Box>
-                </Box>
-              </Container>
-            </Container>
-          </Box>
-        </Fade>
-      </Modal>
-    </div>
-  );
-}
+                </Container>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={()=>{handleSubmit();}}>
+                    Publier
+                </Button>
+            </DialogActions>
+        </BootstrapDialog>
+    );
+};

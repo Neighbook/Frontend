@@ -15,6 +15,7 @@ import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {Fade, IconButton, ImageList, ImageListItem, Modal, Popover} from "@mui/material";
 import {useAuth} from "./AuthProvider";
 import type {Post, NombreReactions} from "../hook/social";
@@ -32,7 +33,7 @@ interface props{
 }
 
 export const SocialPost = ({post, sx, fullSize=false}: props) => {
-    const {usersBase} = useAuth();
+    const {usersBase, currentUser} = useAuth();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const [openModal, setOpenModal] = useState<boolean>(false);
@@ -100,6 +101,9 @@ export const SocialPost = ({post, sx, fullSize=false}: props) => {
                             navigate("/social");
                         }}>
                             <ArrowBackIosNewIcon/>
+                        </IconButton>}
+                        {author?.id===currentUser?.id&&<IconButton aria-label="delete">
+                            <DeleteOutlineIcon color="error"/>
                         </IconButton>}
                         <IconButton aria-label="share">
                             <ShareIcon />

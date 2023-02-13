@@ -1,4 +1,4 @@
-import { socialApi } from "./neighbookApi";
+import {socialApi} from "./neighbookApi";
 import type { GenericAbortSignal } from "axios";
 
 interface Image {
@@ -39,19 +39,30 @@ export interface Post {
 }
 
 export const addPost = async (
-  title: string,
-  description: string
-): Promise<void> => {
-  const apiRes = await socialApi.post("post", {
-    title,
-    description,
-  });
-  if (apiRes.status === 200) {
-    await socialApi.patch("post", { title, description });
-  }
-  throw Error("Error creating post");
+    titre: string,
+    description: string,
+    estPartage = false
+): Promise<Post> => {
+    const apiRes = await socialApi.post("post", {
+        titre,
+        description,
+        estPartage
+    });
+    if (apiRes.status === 200) {
+        return apiRes.data as Post;
+    }
+    throw Error("Error creating post");
 };
 
+export const addPostImage = async (postId: string, file: File): Promise<Image> => {
+    const apiRes = await socialApi.post("image/"+postId, {file}, {headers: {
+        'Content-Type': 'multipart/form-data'
+    }});
+    if(apiRes.status === 200){
+        return apiRes.data as Image;
+    }
+    throw Error('error while uploading file');
+};
 
 export const getFeed = async (signal: GenericAbortSignal): Promise<Array<Post> | null> => {
     const apiRes = await socialApi.get("feed", {signal: signal});
