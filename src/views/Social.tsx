@@ -1,30 +1,35 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Container} from '@mui/material';
-import { SocialPost } from '../components/SocialPost';
-import type {Post} from "../hook/social";
-import {getFeed, getPost} from "../hook/social";
-import InfiniteScroll from 'react-infinite-scroller';
-import {useParams} from "react-router";
-import {PostComments} from "./PostComments";
+import React, { useEffect, useState } from "react";
+import { Box, Button, Container } from "@mui/material";
+import { SocialPost } from "../components/SocialPost";
+import type { Post } from "../hook/social";
+import { getFeed, getPost } from "../hook/social";
+import InfiniteScroll from "react-infinite-scroller";
+import { useParams } from "react-router";
+import { PostComments } from "./PostComments";
 import {FeedLoading} from "../components/Loading";
-
+import NewEvent from "./NewEvent";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const Social = () => {
-    const { postId } = useParams();
-    const [post, setPost] = useState<Post | null>(null);
+  const { postId } = useParams();
+  const [post, setPost] = useState<Post | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const itemsPerPage = 5;
+  const [hasMore, setHasMore] = useState(true);
+  const [records, setrecords] = useState(0);
+  const [feed, setFeed] = useState<Array<Post> | null>(null);
 
-    const itemsPerPage = 5;
-    const [hasMore, setHasMore] = useState(true);
-    const [records, setrecords] = useState(0);
-    const [feed, setFeed] = useState<Array<Post> | null>(null);
-
-    useEffect(() => {
-        const controller = new AbortController();
-        getFeed(controller.signal).then(res => { setFeed(res); }).catch(()=>null);
-        return () => {
-            controller.abort();
-        };
-    }, []);
+  useEffect(() => {
+    const controller = new AbortController();
+    getFeed(controller.signal)
+      .then((res) => {
+        setFeed(res);
+      })
+      .catch(() => null);
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
     useEffect(() => {
         const controller = new AbortController();
@@ -47,15 +52,15 @@ const Social = () => {
         }
     };
 
-    const renderPosts = (data: Array<Post>) => {
-        const items = [];
-        let post;
-        for (let i = 0; i < records; i++) {
-            post = data[i];
-            items.push(<SocialPost post={post} sx={{mb: 3}} key={post.id}/>);
-        }
-        return items;
-    };
+  const renderPosts = (data: Array<Post>) => {
+    const items = [];
+    let post;
+    for (let i = 0; i < records; i++) {
+      post = data[i];
+      items.push(<SocialPost post={post} sx={{ mb: 3 }} key={post.id} />);
+    }
+    return items;
+  };
 
     const renderPost = (post: Post) => {
         return (
@@ -85,6 +90,23 @@ const Social = () => {
                     {post?renderPost(post):renderPosts(feed)}
                 </InfiniteScroll>:<FeedLoading/>}
             </Box>
+            <div>
+              <Button
+                onClick={() => setShowModal(true)}
+                sx={{
+                  position: "fixed",
+                  bottom: 40,
+                  right: 40,
+                  borderRadius: 100,
+                }}
+              >
+                <AddCircleIcon sx={{ fontSize: 50 }} />
+              </Button>
+              <NewEvent
+                open={showModal}
+                onClose={() => setShowModal(false)}
+              ></NewEvent>
+            </div>
         </Container>);
 };
 
