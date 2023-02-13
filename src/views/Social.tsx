@@ -110,7 +110,7 @@ const Social = () => {
                         position: "fixed",
                         bottom: '1rem',
                         right: '1rem',
-                        borderRadius: 100,
+                        borderRadius: '50%',
                     }}
                 >
                     <AddCircleIcon sx={{fontSize: '4rem'}}/>

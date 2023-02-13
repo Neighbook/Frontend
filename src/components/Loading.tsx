@@ -24,10 +24,10 @@ export const UserLoading = () => (
 
 export const FeedLoading = () => (
     <Box>
-        <Skeleton variant="rectangular" sx={{width:"650px", height: "12rem", mb: 3}} />
-        <Skeleton variant="rectangular" sx={{width:"650px", height: "30rem", mb: 3}} />
-        <Skeleton variant="rectangular" sx={{width:"650px", height: "30rem", mb: 3}} />
-        <Skeleton variant="rectangular" sx={{width:"650px", height: "12rem", mb: 3}} />
+        <Skeleton variant="rectangular" sx={{width:"650px", height: "12rem", mb: 3, borderRadius: '10px'}} />
+        <Skeleton variant="rectangular" sx={{width:"650px", height: "30rem", mb: 3, borderRadius: '10px'}} />
+        <Skeleton variant="rectangular" sx={{width:"650px", height: "30rem", mb: 3, borderRadius: '10px'}} />
+        <Skeleton variant="rectangular" sx={{width:"650px", height: "12rem", mb: 3, borderRadius: '10px'}} />
     </Box>
 );
 
