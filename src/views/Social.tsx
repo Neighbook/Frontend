@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Container } from "@mui/material";
+import {Box, Button, Container, Skeleton} from "@mui/material";
 import { SocialPost } from "../components/SocialPost";
 import type { Post } from "../hook/social";
 import {getFeed, getPost, removePost} from "../hook/social";
@@ -96,7 +96,7 @@ const Social = () => {
                     loadMore={loadMore}
                     hasMore={hasMore}
                     style={{width: "100%"}}
-                    loader={<div className="loader" key={0}>Loading ...</div>}
+                    loader={<Box key="loader" sx={{ width: '100%' }}><Skeleton height={50}/></Box>}
                 >
                     {post?renderPost(post):renderPosts(feed)}
                 </InfiniteScroll>:<FeedLoading/>}
