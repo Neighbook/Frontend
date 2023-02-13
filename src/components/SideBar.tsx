@@ -15,8 +15,9 @@ import messagerie from '/asset/images/messagerie.svg';
 import account from '/asset/images/account.svg';
 import logout from '/asset/images/logout.svg';
 import {Link} from "react-router-dom";
-import {Button} from "@mui/material";
+import {Button, Divider} from "@mui/material";
 import {useAuth} from "./AuthProvider";
+import {UserSearch} from "./UserSearch";
 
 interface SidebarItemProps{
     icon: string;
@@ -44,10 +45,14 @@ export default function SideBar() {
 
     const drawer = (
         <>
-            <Box sx={{display: 'flex', justifyContent: 'center',  m: 4}}>
+            <Box sx={{display: 'flex', justifyContent: 'center',  mt: 2}}>
                 <Link to="/"><img src={logo} alt="logo" className='sidebar-logo'/></Link>
             </Box>
             <List>
+                <ListItem>
+                    <UserSearch/>
+                </ListItem>
+                <Divider sx={{mt: 2, mb: 2}} />
                 <SideBarItem icon={home} text="Accueil" url="/"/>
                 <SideBarItem icon={social} text="Social" url="/social"/>
                 <SideBarItem icon={marketplace} text="Marketplace" url="/marketplace"/>
