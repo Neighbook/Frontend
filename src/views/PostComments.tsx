@@ -131,7 +131,7 @@ export const PostComments = ({post}:props) => {
                         inputRef={responseRef}
                         autoFocus
                         onKeyDown={event=>{
-                            if(event.key==='Enter') {
+                            if(event.key==='Enter' && !event.shiftKey) {
                                 handleNewResponse();
                             }
                         }}
@@ -161,7 +161,7 @@ export const PostComments = ({post}:props) => {
                     setNewComment(e.currentTarget.value);
                 }}
                 onKeyDown={event=>{
-                    if(event.key==='Enter'){
+                    if(event.key==='Enter' && !event.shiftKey){
                         handleNewComment(event);
                     }
                 }}
