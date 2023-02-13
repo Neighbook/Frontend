@@ -7,6 +7,7 @@ import {getUser, updateUser} from "../hook/user";
 import {CompteLoading} from "../components/Loading";
 import '../css/Compte.css';
 import {deleteFile, renewFileUrl, uploadFile} from "../hook/file";
+import defaultPfp from "/asset/images/pfp.png";
 
 const Compte = () => {
     const {currentUser} = useAuth();
@@ -137,12 +138,11 @@ const Compte = () => {
                 {imgUrl === "loading"?
                     <Skeleton variant="circular" sx={{width: "20vh", height: "20vh", minHeight: "200px", minWidth: "200px", aspectRatio: "1/1"}}/>
                     :
-                    <img src={imgUrl ??
-                        "https://cdn-icons-png.flaticon.com/512/4193/4193310.png"}
-                    className="pfp"
-                    style={{aspectRatio:'1/1', objectFit: 'cover'}}
-                    alt="profile"
-                    onError={handleImgError}
+                    <img src={imgUrl ?? defaultPfp}
+                        className="pfp"
+                        style={{aspectRatio:'1/1', objectFit: 'cover'}}
+                        alt="profile"
+                        onError={handleImgError}
                     />}
                 <input
                     style={{ display: 'none' }}

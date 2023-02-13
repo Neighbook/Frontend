@@ -25,14 +25,14 @@ class authenticatedApi {
 
     private createInstance(route: string){
         const instance = axios.create({
-            baseURL: config.api_base_url + route
+            baseURL: config.api_base_url + (route === "default" ? "" : route)
         });
         instance.interceptors.request.use(this._handleRequest);
         this.instances[route] = instance;
         return instance;
     }
 
-    public getInstance(route: string){
+    public getInstance(route: string = "default"){
         if(Object.prototype.hasOwnProperty.call(this.instances, route)){
             return this.instances[route];
         }
@@ -41,5 +41,7 @@ class authenticatedApi {
 }
 
 export const neighbookApi = new authenticatedApi();
+export const baseApi = neighbookApi.getInstance();
 export const userApi = neighbookApi.getInstance(config.user_route);
 export const fileApi = neighbookApi.getInstance(config.file_route);
+export const socialApi = neighbookApi.getInstance(config.social_route);

@@ -4,6 +4,9 @@ import {useLocation, useNavigate} from "react-router";
 import { decodeToken, isExpired } from "react-jwt";
 import { useCookies } from "react-cookie";
 import {neighbookApi} from "../hook/neighbookApi";
+import type { User} from "../hook/user";
+import {getUsers} from "../hook/user";
+import {getFollows} from "../hook/follow";
 
 interface Props{
     children: JSX.Element | string
@@ -17,7 +20,7 @@ interface Token{
     exp: number
 }
 
-interface User{
+interface CurrentUser{
     id: string
     firstname: string
     lastname: string
@@ -33,27 +36,33 @@ interface Location{
 }
 
 interface AuthContextType{
-    currentUser: User | null
+    currentUser: CurrentUser | null
+    usersBase: Array<User> | null
+    follows: Array<User> | null
     getToken: Function
     onLogin?: (email: string, password: string) => Promise<void>;
     onRegister: Function;
     onLogout: Function
     isLoggedIn: ()=>boolean
+    reloadFollows: Function
 }
 
 const AuthContext = React.createContext<AuthContextType>({
     currentUser: null,
+    usersBase: null,
+    follows: null,
     getToken: ()=>null,
     onLogout: ()=>null,
     onRegister: ()=>null,
-    isLoggedIn: ()=>false
+    isLoggedIn: ()=>false,
+    reloadFollows: ()=>false
 });
 
 export const useAuth = () => {
     return React.useContext(AuthContext);
 };
 
-const getUserFromToken = (token: string): User => {
+const getUserFromToken = (token: string): CurrentUser => {
     const decodedToken = decodeToken(token) as Token;
     return {
         id: decodedToken._user_id,
@@ -65,18 +74,30 @@ const getUserFromToken = (token: string): User => {
 
 export const AuthProvider = ({ children }: Props) => {
     const [token, setToken, removeToken] = useCookies(['token']);
-    const [currentUser, setCurrentUser] = React.useState<User | null>(null);
+    const [currentUser, setCurrentUser] = React.useState<CurrentUser | null>(null);
+    const [usersBase, setUsersBase] = React.useState<Array<User> | null>(null);
+    const [follows, setFollows] = React.useState<Array<User> | null>(null);
     const location = useLocation() as Location;
     const navigate = useNavigate();
 
     useEffect(()=>{
+        const controller = new AbortController();
         if(token.token !== null && token.token !== undefined){
             neighbookApi.setToken(token.token);
             if(currentUser === null) {
                 setCurrentUser(getUserFromToken(token.token));
             }
+            if(usersBase === null){
+                getUsers(controller.signal).then(res=>{ setUsersBase(res); }).catch(()=>null);
+            }
+            if(follows === null){
+                getFollows(controller.signal).then(res=>{ setFollows(res); }).catch(()=>null);
+            }
         }
-    }, [token, currentUser]);
+        return () => {
+            controller.abort();
+        };
+    }, [token, currentUser, usersBase, follows]);
 
     const getToken = (): string => {
         if(token.token === null){
@@ -111,13 +132,20 @@ export const AuthProvider = ({ children }: Props) => {
         return !isExpired(token.token);
     };
 
+    const reloadFollows = (): void => {
+        setFollows(null);
+    };
+
     const value = {
         currentUser,
+        usersBase,
+        follows,
         getToken,
         onLogin: handleLogin,
         onRegister: handleRegister,
         onLogout: handleLogout,
-        isLoggedIn
+        isLoggedIn,
+        reloadFollows
     };
 
     return (
