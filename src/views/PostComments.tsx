@@ -41,9 +41,10 @@ export const PostComments = ({post}:props) => {
         }
     }, [post]);
 
-    const handleNewComment = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleNewComment = (event: React.FormEvent<HTMLDivElement | HTMLFormElement>) => {
         event.preventDefault();
         postComment(post.id, newComment, null).then(com=>{ setLocalCommentaires([com, ...localCommentaires]); }).catch(()=>null);
+        setNewComment("");
     };
 
     const handleCommentDelete = (id: string) => {
@@ -96,6 +97,7 @@ export const PostComments = ({post}:props) => {
                                     component="span"
                                     variant="body2"
                                     color="error"
+                                    sx={{'&:hover': {cursor: "pointer"}}}
                                     onClick={()=>{handleCommentDelete(commentaire.id);}}
                                 >
                                     supprimer
@@ -104,6 +106,7 @@ export const PostComments = ({post}:props) => {
                                         component="span"
                                         variant="body2"
                                         color="secondary"
+                                        sx={{'&:hover': {cursor: "pointer"}}}
                                         onClick={()=>{setResponseToId(reponseId === responseToId ? "" : reponseId);}}
                                     >
                                         {commentaire.id === responseToId ? "annuler" : "repondre"}
@@ -126,6 +129,12 @@ export const PostComments = ({post}:props) => {
                         multiline
                         rows={1}
                         inputRef={responseRef}
+                        autoFocus
+                        onKeyDown={event=>{
+                            if(event.key==='Enter') {
+                                handleNewResponse();
+                            }
+                        }}
                     />
                     <IconButton color="secondary" onClick={handleNewResponse}>
                         <SendIcon/>
@@ -150,6 +159,11 @@ export const PostComments = ({post}:props) => {
                 value={newComment}
                 onChange={(e)=> {
                     setNewComment(e.currentTarget.value);
+                }}
+                onKeyDown={event=>{
+                    if(event.key==='Enter'){
+                        handleNewComment(event);
+                    }
                 }}
             />
             <IconButton color="secondary" type="submit">
