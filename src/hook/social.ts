@@ -11,6 +11,7 @@ export interface Commentaire {
   idUtilisateur: string;
   contenu: string;
   idCommentaire?: string;
+  dateDeCreation: string;
 }
 
 export interface NombreReactions {
