@@ -1,4 +1,5 @@
-import React, {ChangeEvent, useRef, useState} from "react";
+import type {ChangeEvent} from "react";
+import React, { useRef, useState} from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
@@ -47,7 +48,7 @@ export const NewEvent = ({open, handleClose}: props) => {
             .then((post) => {
                 Promise.all(files.map((file)=>{
                     if(file) {
-                        return addPostImage(post.id, file).then(()=>setLoading(loading+1));
+                        return addPostImage(post.id, file).then(()=>{ setLoading(loading+1); });
                     }
                     return null;
                 })).then(()=>{
@@ -55,7 +56,7 @@ export const NewEvent = ({open, handleClose}: props) => {
                     setImgUrls(["", "", "", ""]);
                     setLoading(-1);
                     fileRef.current.forEach(c=>{
-                        if(c?.value){
+                        if(c !== null){
                             c.value="";
                         }
                     });
@@ -151,10 +152,10 @@ export const NewEvent = ({open, handleClose}: props) => {
                             <Grid container rowSpacing={{ xs: 1, sm: 2, md: 3 }} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                 {imgUrls.map((img, i)=><Grid item xs={6} key={`img${i}`}>
                                     <Box sx={{display: "flex", alignItems: 'center', justifyContent: 'center', outline: "dashed #00000036 0.15em", height: "6rem"}} onClick={()=>{handleUploadClick(i);}}>
-                                        {img?<img src={img} style={{height: "100%", width: "100%", objectFit: 'cover'}}/>:<AddPhotoAlternateIcon/>}
+                                        {img?<img src={img} style={{height: "100%", width: "100%", objectFit: 'cover'}} alt='uploaded'/>:<AddPhotoAlternateIcon/>}
                                         <input
                                             name="image"
-                                            onChange={(e)=>handleFileChange(e, i)}
+                                            onChange={(e)=>{ handleFileChange(e, i); }}
                                             style={{ display: "none" }}
                                             type="file"
                                             ref={e=>fileRef.current[i]=e}

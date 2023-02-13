@@ -30,7 +30,7 @@ export interface Post {
   idUtilisateur: string;
   dateDeCreation: Date;
   dateDeModification: Date;
-  commentaires: Array<Commentaire>;
+  commentaires?: Array<Commentaire>;
   ncommentaires: number;
   reactionUtilisateur: number;
   images: Array<Image>;
@@ -52,6 +52,14 @@ export const addPost = async (
         return apiRes.data as Post;
     }
     throw Error("Error creating post");
+};
+
+export const removePost = async (post: Post): Promise<void> => {
+    await Promise.all(post.images.map(async(img)=>{
+        const res = await socialApi.delete('image', {params: {id: img.id}});
+        return res.status;
+    }));
+    await socialApi.delete('post', {params: {id: post.id}});
 };
 
 export const addPostImage = async (postId: string, file: File): Promise<Image> => {

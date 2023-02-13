@@ -29,10 +29,11 @@ import {relativeDateComment} from "../utils/Date";
 interface props{
     post: Post
     sx: {}
+    onPostRemove: Function
     fullSize?: boolean
 }
 
-export const SocialPost = ({post, sx, fullSize=false}: props) => {
+export const SocialPost = ({post, sx, fullSize=false, onPostRemove}: props) => {
     const {usersBase, currentUser} = useAuth();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -102,7 +103,7 @@ export const SocialPost = ({post, sx, fullSize=false}: props) => {
                         }}>
                             <ArrowBackIosNewIcon/>
                         </IconButton>}
-                        {author?.id===currentUser?.id&&<IconButton aria-label="delete">
+                        {author?.id===currentUser?.id&&<IconButton aria-label="delete" onClick={()=>{onPostRemove(post);}}>
                             <DeleteOutlineIcon color="error"/>
                         </IconButton>}
                         <IconButton aria-label="share">

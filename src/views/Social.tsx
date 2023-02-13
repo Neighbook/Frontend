@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { Box, Button, Container } from "@mui/material";
 import { SocialPost } from "../components/SocialPost";
 import type { Post } from "../hook/social";
-import { getFeed, getPost } from "../hook/social";
+import {getFeed, getPost, removePost} from "../hook/social";
 import InfiniteScroll from "react-infinite-scroller";
-import { useParams } from "react-router";
+import {useNavigate, useParams} from "react-router";
 import { PostComments } from "./PostComments";
 import {FeedLoading} from "../components/Loading";
 import {NewEvent} from "./NewEvent";
@@ -13,11 +13,12 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 const Social = () => {
     const { postId } = useParams();
     const [post, setPost] = useState<Post | null>(null);
-    const [newPostModal, setNewPostModal] = useState(true);
+    const [newPostModal, setNewPostModal] = useState(false);
     const itemsPerPage = 5;
     const [hasMore, setHasMore] = useState(true);
     const [records, setrecords] = useState(0);
     const [feed, setFeed] = useState<Array<Post> | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const controller = new AbortController();
@@ -52,12 +53,18 @@ const Social = () => {
         }
     };
 
+    const handlePostRemove = (post: Post) => {
+        setrecords(records-1);
+        setFeed(feed?.filter(p=>p.id!==post.id) ?? null);
+        removePost(post).then(()=>null).catch(()=>null);
+    };
+
     const renderPosts = (data: Array<Post>) => {
         const items = [];
         let post;
         for (let i = 0; i < records; i++) {
             post = data[i];
-            items.push(<SocialPost post={post} sx={{ mb: 3 }} key={post.id} />);
+            items.push(<SocialPost post={post} sx={{ mb: 3 }} key={post.id} onPostRemove={handlePostRemove}/>);
         }
         return items;
     };
@@ -65,7 +72,11 @@ const Social = () => {
     const renderPost = (post: Post) => {
         return (
             <>
-                <SocialPost post={post} sx={{mb: 2}} fullSize/>
+                <SocialPost post={post} sx={{mb: 2}} fullSize onPostRemove={(post: Post)=>{
+                    setPost(null);
+                    handlePostRemove(post);
+                    navigate('/social');
+                }}/>
                 <PostComments post={post}/>
             </>
         );
@@ -91,18 +102,18 @@ const Social = () => {
                 </InfiniteScroll>:<FeedLoading/>}
             </Box>
             <div>
-                {!post&&<Button
+                {!post&&!newPostModal&&<Button
                     onClick={() => {
                         setNewPostModal(true);
                     }}
                     sx={{
                         position: "fixed",
-                        bottom: 40,
-                        right: 40,
+                        bottom: '1rem',
+                        right: '1rem',
                         borderRadius: 100,
                     }}
                 >
-                    <AddCircleIcon sx={{fontSize: 50}}/>
+                    <AddCircleIcon sx={{fontSize: '4rem'}}/>
                 </Button>}
                 <NewEvent open={newPostModal} handleClose={() => {setNewPostModal(false);}}/>
             </div>
