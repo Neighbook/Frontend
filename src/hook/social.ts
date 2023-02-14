@@ -35,9 +35,21 @@ export interface Post {
   ncommentaires: number;
   reactionUtilisateur: number;
   images: Array<Image>;
-  evenement: {};
+  evenement: Event;
   nombreReactions: NombreReactions;
   repost: Post | null;
+}
+
+export interface Event {
+    id: string;
+    titre: string;
+    dateEvenement: Date;
+    longitude: number;
+    latitude: number;
+    adresse: string;
+    dateDeCreation: Date;
+    dateDeModification: Date;
+    dateDeSuppression?: Date;
 }
 
 export const addPost = async (
