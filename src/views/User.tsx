@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Box, Button, Divider, Typography} from '@mui/material';
+import {Box, Button, Container, Divider, Typography} from '@mui/material';
 import type {User} from "../hook/user";
 import {UserLoading} from "../components/Loading";
 import '../css/Compte.css';
@@ -7,12 +7,16 @@ import defaultPfp from "/asset/images/pfp.png";
 import {useParams} from "react-router";
 import {useAuth} from "../components/AuthProvider";
 import {unfollow, follow, getFollowers} from "../hook/follow";
+import {getUserPosts} from "../hook/social";
+import type { Post } from "../hook/social";
+import Feed from "../components/Feed";
 
 const UserView = () => {
     const { userId } = useParams();
     const {currentUser, usersBase, follows, reloadFollows} = useAuth();
     const [userInfo, setUserInfo] = useState<User|null>(null);
     const [followers, setFollowers] = useState<number|null>(null);
+    const [feed, setFeed] = useState<Array<Post> | null>(null);
 
     const isFollowing = follows?.find(follow=>follow.id === userId);
 
@@ -20,9 +24,13 @@ const UserView = () => {
     useEffect(() => {
         const controller = new AbortController();
         setFollowers(null);
+        setFeed(null);
         if(userId !== undefined) {
             getFollowers(userId, controller.signal).then(res=> {
                 setFollowers(res.length);
+            }).catch(()=>null);
+            getUserPosts(userId, controller.signal).then(res=> {
+                setFeed(res);
             }).catch(()=>null);
         }
         return () => {
@@ -89,6 +97,17 @@ const UserView = () => {
                 </Box>
                 <Divider/>
             </Box>
+            <Container component="main" maxWidth="md" sx={{mt: 5}}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                >
+                    {feed&&<Feed posts={feed}/>}
+                </Box>
+            </Container>
         </Box>
     );
 };

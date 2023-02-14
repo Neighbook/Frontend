@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import type {Image, Post} from "../hook/social";
 import {addPost, addPostImage} from "../hook/social";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import {SocialPost} from "../components/SocialPost";
+import {SocialPost} from "./SocialPost";
 
 interface EditedPost{
     titre: string

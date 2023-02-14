@@ -82,6 +82,14 @@ export const getFeed = async (signal: GenericAbortSignal): Promise<Array<Post> |
     return null;
 };
 
+export const getUserPosts = async (userId: string, signal: GenericAbortSignal): Promise<Array<Post> | null> => {
+    const apiRes = await socialApi.get("posts", {signal: signal, params: {userId}});
+    if(apiRes.status === 200){
+        return apiRes.data as Array<Post>;
+    }
+    return null;
+};
+
 export const getPost = async (id: string, signal: GenericAbortSignal): Promise<Post | null> => {
     const apiRes = await socialApi.get("post", {signal: signal, params:{id}});
     if(apiRes.status === 200){
