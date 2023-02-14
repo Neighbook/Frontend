@@ -1,4 +1,4 @@
-import {Icon, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import type { Event } from "../hook/social";
 import '../css/EventItem.css';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
@@ -43,4 +43,4 @@ export const EventItem = ({event, sx}: props) => {
             </TableBody>
         </TableContainer>
     );
-}
+};

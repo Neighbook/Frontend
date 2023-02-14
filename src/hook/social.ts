@@ -102,6 +102,21 @@ export const getUserPosts = async (userId: string, signal: GenericAbortSignal): 
     return null;
 };
 
+export const getLocationFeed = async (
+    distance: number, longitude: number, latitude: number, signal: GenericAbortSignal
+): Promise<Array<Post> | null> => {
+    const apiRes = await socialApi.get("localisationFeed",
+        {
+            signal: signal,
+            params: {distance: distance, longitude: longitude, latitude: latitude}
+        });
+    console.log(apiRes);
+    if(apiRes.status === 200){
+        return apiRes.data as Array<Post>;
+    }
+    return null;
+};
+
 export const getPost = async (id: string, signal: GenericAbortSignal): Promise<Post | null> => {
     const apiRes = await socialApi.get("post", {signal: signal, params:{id}});
     if(apiRes.status === 200){
