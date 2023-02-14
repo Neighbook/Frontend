@@ -13,6 +13,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 const Social = () => {
     const { postId } = useParams();
     const [post, setPost] = useState<Post | null>(null);
+    const [repost, setRepost] = useState<Post | null>(null);
     const [newPostModal, setNewPostModal] = useState(false);
     const itemsPerPage = 5;
     const [hasMore, setHasMore] = useState(true);
@@ -59,12 +60,25 @@ const Social = () => {
         removePost(post).then(()=>null).catch(()=>null);
     };
 
+    const handleRepost = (post: Post) => {
+        setRepost(post);
+        setNewPostModal(true);
+    };
+
+    const handleNewPost = (post: Post) => {
+        if(feed) {
+            const copyFeed = [...feed];
+            copyFeed.unshift(post);
+            setFeed(copyFeed);
+        }
+    };
+
     const renderPosts = (data: Array<Post>) => {
         const items = [];
         let post;
         for (let i = 0; i < records; i++) {
             post = data[i];
-            items.push(<SocialPost post={post} sx={{ mb: 3 }} key={post.id} onPostRemove={handlePostRemove}/>);
+            items.push(<SocialPost post={post} sx={{ mb: 3 }} key={post.id} onPostRemove={handlePostRemove} onRepost={handleRepost}/>);
         }
         return items;
     };
@@ -76,7 +90,7 @@ const Social = () => {
                     setPost(null);
                     handlePostRemove(post);
                     navigate('/social');
-                }}/>
+                }} onRepost={handleRepost}/>
                 <PostComments post={post}/>
             </>
         );
@@ -104,6 +118,7 @@ const Social = () => {
             <div>
                 {!post&&!newPostModal&&<Button
                     onClick={() => {
+                        setRepost(null);
                         setNewPostModal(true);
                     }}
                     sx={{
@@ -115,7 +130,7 @@ const Social = () => {
                 >
                     <AddCircleIcon sx={{fontSize: '4rem'}}/>
                 </Button>}
-                <NewEvent open={newPostModal} handleClose={() => {setNewPostModal(false);}}/>
+                <NewEvent open={newPostModal} handleClose={() => {setNewPostModal(false);}} repost={repost} onPost={handleNewPost}/>
             </div>
         </Container>);
 };

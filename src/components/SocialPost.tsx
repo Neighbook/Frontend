@@ -28,12 +28,15 @@ import {relativeDateComment} from "../utils/Date";
 
 interface props{
     post: Post
-    sx: {}
-    onPostRemove: Function
+    sx?: {}
+    onPostRemove?: Function
+    onRepost?: Function
     fullSize?: boolean
+    embedded?: boolean
+    disabled?: boolean
 }
 
-export const SocialPost = ({post, sx, fullSize=false, onPostRemove}: props) => {
+export const SocialPost = ({post, sx={}, fullSize=false, embedded=false, onPostRemove=()=>null, onRepost=()=>null, disabled=false}: props) => {
     const {usersBase, currentUser} = useAuth();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
@@ -60,7 +63,13 @@ export const SocialPost = ({post, sx, fullSize=false, onPostRemove}: props) => {
 
 
     return (
-        <Card sx={{boxShadow: '10', borderRadius: '10px', width: '100%', ...sx}}>
+        <Card onClick={(event) => {
+            event.stopPropagation();
+            if(!disabled){
+                navigate(`/post/${post.id}`);
+            }
+        }}
+        sx={{boxShadow: embedded?'2':'10', borderRadius: '10px', width: '100%', '&:hover': {cursor: disabled?"inherit":"pointer"},...sx}}>
             <Popover
                 id="mouse-over-popover"
                 sx={{
@@ -90,23 +99,32 @@ export const SocialPost = ({post, sx, fullSize=false, onPostRemove}: props) => {
                         onMouseLeave={()=> {
                             setAnchorEl(null);
                         }}
-                        onClick={()=>{
+                        onClick={(event)=>{
+                            event.stopPropagation();
                             navigate(`/user/${author?.id ?? ''}`);
                         }}
                         sx={{'&:hover': {cursor: "pointer"}}}
                     />
                 }
-                action={
+                action={!embedded&&
                     <>
-                        {fullSize&&<IconButton onClick={() => {
+                        {fullSize&&<IconButton onClick={(event) => {
+                            event.stopPropagation();
                             navigate("/social");
                         }}>
                             <ArrowBackIosNewIcon/>
                         </IconButton>}
-                        {author?.id===currentUser?.id&&<IconButton aria-label="delete" onClick={()=>{onPostRemove(post);}}>
+                        {author?.id===currentUser?.id&&<IconButton aria-label="delete"
+                            onClick={(event)=>{
+                                event.stopPropagation();
+                                onPostRemove(post);
+                            }}>
                             <DeleteOutlineIcon color="error"/>
                         </IconButton>}
-                        <IconButton aria-label="share">
+                        <IconButton aria-label="share" onClick={(event)=>{
+                            event.stopPropagation();
+                            onRepost(post);
+                        }}>
                             <ShareIcon />
                         </IconButton>
                     </>
@@ -123,7 +141,8 @@ export const SocialPost = ({post, sx, fullSize=false, onPostRemove}: props) => {
                                 src={image.url}
                                 style={{borderRadius: '10px', height:"100%", objectFit: "cover"}}
                                 loading="lazy"
-                                onClick={()=> {
+                                onClick={(event)=> {
+                                    event.stopPropagation();
                                     setImgModal(image.url);
                                     setOpenModal(true);
                                 }}
@@ -132,46 +151,69 @@ export const SocialPost = ({post, sx, fullSize=false, onPostRemove}: props) => {
                     ))}
                 </ImageList>
             </CardMedia>}
-            <CardContent onClick={() => { navigate(`/post/${post.id}`); }} sx={{'&:hover': {cursor: "pointer"}}}>
-                <Typography variant="body2" color="text.secondary">
-                    {post.description}
-                </Typography>
+            <CardContent>
+                <>
+                    <Typography variant="body2" color="text.secondary" mb={3}>
+                        {post.description}
+                    </Typography>
+                    {post.repost&&<SocialPost post={post.repost} embedded disabled={disabled}/>}
+                </>
             </CardContent>
-            <CardActions disableSpacing>
-                <IconButton aria-label="like" onClick={()=> {setUserReaction(1);}}>
+            {!embedded&&<CardActions disableSpacing>
+                <IconButton aria-label="like" onClick={(event) => {
+                    event.stopPropagation();
+                    setUserReaction(1);
+                }}>
                     {nombreReactions.like || ''}
-                    <FavoriteBorderOutlinedIcon sx={reactionUtilisateur===1?{color: "#ff5656"}:{}}/>
+                    <FavoriteBorderOutlinedIcon sx={reactionUtilisateur === 1 ? {color: "#ff5656"} : {}}/>
                 </IconButton>
-                <IconButton aria-label="mdr" onClick={()=>{setUserReaction(2);}}>
+                <IconButton aria-label="mdr" onClick={(event) => {
+                    event.stopPropagation();
+                    setUserReaction(2);
+                }}>
                     {nombreReactions.mdr || ''}
-                    <SentimentVerySatisfiedOutlinedIcon sx={reactionUtilisateur===2?{color: "#efb81a"}:{}}/>
+                    <SentimentVerySatisfiedOutlinedIcon sx={reactionUtilisateur === 2 ? {color: "#efb81a"} : {}}/>
                 </IconButton>
-                <IconButton aria-label="Oo" onClick={()=>{setUserReaction(3);}}>
+                <IconButton aria-label="Oo" onClick={(event) => {
+                    event.stopPropagation();
+                    setUserReaction(3);
+                }}>
                     {nombreReactions.Oo || ''}
-                    <SentimentVerySatisfiedIcon sx={reactionUtilisateur===3?{color: "#efb81a"}:{}}/>
+                    <SentimentVerySatisfiedIcon sx={reactionUtilisateur === 3 ? {color: "#efb81a"} : {}}/>
                 </IconButton>
-                <IconButton aria-label="snif" onClick={()=>{setUserReaction(4);}}>
+                <IconButton aria-label="snif" onClick={(event) => {
+                    event.stopPropagation();
+                    setUserReaction(4);
+                }}>
                     {nombreReactions.snif || ''}
-                    <SentimentDissatisfiedIcon sx={reactionUtilisateur===4?{color: "#efb81a"}:{}}/>
+                    <SentimentDissatisfiedIcon sx={reactionUtilisateur === 4 ? {color: "#efb81a"} : {}}/>
                 </IconButton>
-                <IconButton aria-label="grr" onClick={()=>{setUserReaction(5);}}>
+                <IconButton aria-label="grr" onClick={(event) => {
+                    event.stopPropagation();
+                    setUserReaction(5);
+                }}>
                     {nombreReactions.grr || ''}
-                    <SentimentVeryDissatisfiedOutlinedIcon sx={reactionUtilisateur===5?{color: "#ea7907"}:{}}/>
+                    <SentimentVeryDissatisfiedOutlinedIcon sx={reactionUtilisateur === 5 ? {color: "#ea7907"} : {}}/>
                 </IconButton>
-                <IconButton aria-label="ok" onClick={()=>{setUserReaction(6);}}>
+                <IconButton aria-label="ok" onClick={(event) => {
+                    event.stopPropagation();
+                    setUserReaction(6);
+                }}>
                     {nombreReactions.ok || ''}
-                    <ThumbUpOutlinedIcon sx={reactionUtilisateur===6?{color: "#5085ee"}:{}}/>
+                    <ThumbUpOutlinedIcon sx={reactionUtilisateur === 6 ? {color: "#5085ee"} : {}}/>
                 </IconButton>
-                <IconButton aria-label="comment" sx={{marginLeft: 'auto'}}
-                    onClick={() => { navigate(`/post/${post.id}`); }} disabled={fullSize}>
+                <IconButton aria-label="comment" sx={{marginLeft: 'auto'}}>
                     {post.ncommentaires || ''}
                     <ChatBubbleOutlineOutlinedIcon color="secondary"/>
-                    {!fullSize&&<ExpandMoreIcon/>}
+                    {!fullSize && <ExpandMoreIcon/>}
                 </IconButton>
-            </CardActions>
+            </CardActions>}
             <Modal
                 open={openModal}
-                onClose={()=>{ setOpenModal(false); }}
+                onClose={(event: MouseEvent)=>{
+                    event.stopPropagation();
+                    setOpenModal(false);
+                }}
                 closeAfterTransition
                 sx={{display: "flex", alignItems: "center", justifyContent: "center"}}
             >
@@ -179,7 +221,10 @@ export const SocialPost = ({post, sx, fullSize=false, onPostRemove}: props) => {
                     <img
                         src={imgModal ?? ""}
                         alt="modal"
-                        onClick={()=>{ setOpenModal(false); }}
+                        onClick={(event)=>{
+                            event.stopPropagation();
+                            setOpenModal(false);
+                        }}
                         style={{ height: "80%", maxWidth: "90%", outline: "none", objectFit: 'contain' }}
                     />
                 </Fade>

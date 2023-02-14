@@ -1,7 +1,7 @@
 import {socialApi} from "./neighbookApi";
 import type { GenericAbortSignal } from "axios";
 
-interface Image {
+export interface Image {
   id: string;
   url: string;
 }
@@ -37,17 +37,18 @@ export interface Post {
   images: Array<Image>;
   evenement: {};
   nombreReactions: NombreReactions;
+  repost: Post | null;
 }
 
 export const addPost = async (
     titre: string,
     description: string,
-    estPartage = false
+    idRepost: string | null
 ): Promise<Post> => {
     const apiRes = await socialApi.post("post", {
         titre,
         description,
-        estPartage
+        idRepost
     });
     if (apiRes.status === 200) {
         return apiRes.data as Post;
