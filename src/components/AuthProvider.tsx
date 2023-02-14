@@ -84,20 +84,14 @@ export const AuthProvider = ({ children }: Props) => {
         const controller = new AbortController();
         if(token.token !== null && token.token !== undefined){
             neighbookApi.setToken(token.token);
-            if(currentUser === null) {
-                setCurrentUser(getUserFromToken(token.token));
-            }
-            if(usersBase === null){
-                getUsers(controller.signal).then(res=>{ setUsersBase(res); }).catch(()=>null);
-            }
-            if(follows === null){
-                getFollows(controller.signal).then(res=>{ setFollows(res); }).catch(()=>null);
-            }
+            setCurrentUser(getUserFromToken(token.token));
+            getUsers(controller.signal).then(res=>{ setUsersBase(res); }).catch(()=>null);
+            getFollows(controller.signal).then(res=>{ setFollows(res); }).catch(()=>null);
         }
         return () => {
             controller.abort();
         };
-    }, [token, currentUser, usersBase, follows]);
+    }, [token]);
 
     const getToken = (): string => {
         if(token.token === null){
@@ -133,7 +127,8 @@ export const AuthProvider = ({ children }: Props) => {
     };
 
     const reloadFollows = (): void => {
-        setFollows(null);
+        const controller = new AbortController();
+        getFollows(controller.signal).then(res=>{ setFollows(res); }).catch(()=>null);
     };
 
     const value = {
