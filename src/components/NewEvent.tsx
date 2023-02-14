@@ -149,7 +149,7 @@ export const NewEvent = ({open, handleClose, repost, onPost}: props) => {
                             fullWidth
                             label="Titre"
                             error={error}
-                            helperText="Titre obligatoire"
+                            helperText={error&&"Titre obligatoire"}
                             InputLabelProps={{
                                 shrink: true,
                             }}
