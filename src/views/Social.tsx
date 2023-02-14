@@ -4,7 +4,7 @@ import { SocialPost } from "../components/SocialPost";
 import type { Post } from "../hook/social";
 import {getFeed, getPost, removePost} from "../hook/social";
 import {useNavigate, useParams} from "react-router";
-import { PostComments } from "./PostComments";
+import { PostComments } from "../components/PostComments";
 import {FeedLoading} from "../components/Loading";
 import {NewEvent} from "../components/NewEvent";
 import AddCircleIcon from "@mui/icons-material/AddCircle";

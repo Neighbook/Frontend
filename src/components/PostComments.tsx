@@ -11,14 +11,15 @@ import {
 } from "@mui/material";
 import type {Commentaire, Post} from "../hook/social";
 import TextField from "@mui/material/TextField";
-import {useAuth} from "../components/AuthProvider";
+import {useAuth} from "./AuthProvider";
 import defaultPfp from "/asset/images/pfp.png";
 import Avatar from "@mui/material/Avatar";
 import SendIcon from '@mui/icons-material/Send';
 import {createRef, useEffect, useState} from "react";
 import {deleteComment, postComment} from "../hook/social";
-import {CommentLoading} from "../components/Loading";
+import {CommentLoading} from "./Loading";
 import {relativeDateComment} from "../utils/Date";
+import {UserAvatar} from "./UserAvatar";
 interface props{
     post: Post
 }
@@ -66,7 +67,7 @@ export const PostComments = ({post}:props) => {
             <>
                 <ListItem alignItems="flex-start">
                     <ListItemAvatar>
-                        <Avatar src={author?.photo ?? defaultPfp} />
+                        {author?<UserAvatar user={author}/>:<Avatar src={defaultPfp}/>}
                     </ListItemAvatar>
                     <Box sx={{width: "100%"}}>
                         <ListItemText

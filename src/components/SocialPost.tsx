@@ -4,7 +4,6 @@ import CardHeader from '@mui/material/CardHeader';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import SentimentVeryDissatisfiedOutlinedIcon from '@mui/icons-material/SentimentVeryDissatisfiedOutlined';
@@ -16,15 +15,16 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import {Fade, IconButton, ImageList, ImageListItem, Modal, Popover} from "@mui/material";
+import {Avatar, Fade, IconButton, ImageList, ImageListItem, Modal} from "@mui/material";
 import {useAuth} from "./AuthProvider";
 import type {Post, NombreReactions} from "../hook/social";
-import defaultPfp from "/asset/images/pfp.png";
 import {useNavigate} from "react-router";
 import {useState} from "react";
 import {updateReaction} from "../hook/social";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {relativeDateComment} from "../utils/Date";
+import {UserAvatar} from "./UserAvatar";
+import defaultPfp from "/asset/images/pfp.png";
 
 interface props{
     post: Post
@@ -39,7 +39,6 @@ interface props{
 export const SocialPost = ({post, sx={}, fullSize=false, embedded=false, onPostRemove=()=>null, onRepost=()=>null, disabled=false}: props) => {
     const {usersBase, currentUser} = useAuth();
     const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [imgModal, setImgModal] = useState<string | null>(null);
     const [nombreReactions, setNombreReactions] = React.useState<NombreReactions>(post.nombreReactions);
@@ -70,42 +69,8 @@ export const SocialPost = ({post, sx={}, fullSize=false, embedded=false, onPostR
             }
         }}
         sx={{boxShadow: embedded?'2':'10', borderRadius: '10px', width: '100%', '&:hover': {cursor: disabled?"inherit":"pointer"},...sx}}>
-            <Popover
-                id="mouse-over-popover"
-                sx={{
-                    pointerEvents: 'none',
-                }}
-                open={anchorEl!==null}
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-                onClose={()=>{setAnchorEl(null);}}
-                disableRestoreFocus
-            >
-                <Typography>{author?.nom_utilisateur}</Typography>
-            </Popover>
             <CardHeader
-                avatar={
-                    <Avatar src={author?.photo ?? defaultPfp}
-                        onMouseEnter={(e)=> {
-                            setAnchorEl(e.currentTarget);
-                        }}
-                        onMouseLeave={()=> {
-                            setAnchorEl(null);
-                        }}
-                        onClick={(event)=>{
-                            event.stopPropagation();
-                            navigate(`/user/${author?.id ?? ''}`);
-                        }}
-                        sx={{'&:hover': {cursor: "pointer"}}}
-                    />
-                }
+                avatar={author?<UserAvatar user={author}/>:<Avatar src={defaultPfp}/>}
                 action={!embedded&&
                     <>
                         {fullSize&&<IconButton onClick={(event) => {
