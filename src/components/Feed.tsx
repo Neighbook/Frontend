@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Skeleton} from "@mui/material";
 import { SocialPost } from "./SocialPost";
 import type { Post } from "../hook/social";
@@ -14,6 +14,14 @@ const Feed = ({posts, handlePostRemove=()=>null, handleRepost=()=>null}: props) 
     const itemsPerPage = 5;
     const [hasMore, setHasMore] = useState(true);
     const [records, setrecords] = useState(0);
+    const [localPosts, setLocalPosts] = useState(posts);
+
+    useEffect(()=>{
+        if(posts.length!==localPosts.length){
+            setLocalPosts(posts);
+            setrecords(records+(posts.length-localPosts.length));
+        }
+    }, [posts, localPosts, records]);
 
     const loadMore = () => {
         const dataLength = posts.length;
@@ -28,7 +36,7 @@ const Feed = ({posts, handlePostRemove=()=>null, handleRepost=()=>null}: props) 
         const items = [];
         let post;
         for (let i = 0; i < records; i++) {
-            post = posts[i];
+            post = localPosts[i];
             items.push(<SocialPost post={post} sx={{ mb: 3 }} key={post.id} onPostRemove={handlePostRemove} onRepost={handleRepost}/>);
         }
         return items;
