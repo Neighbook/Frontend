@@ -3,6 +3,9 @@ import { Box, Grid, makeStyles, Typography } from '@mui/material';
 import { Annonce } from '../components/Annonce';
 import SideBar from '../components/SideBar';
 import marketplace from '/asset/images/marketplace.svg';
+import {Link} from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 
 let annonces = [
@@ -68,6 +71,13 @@ const Marketplace = () => (
 
             </Box>
         ))}
+        </Box>
+        <Box>
+            <Link to={'new'}>
+               <IconButton aria-label={"add"}>
+                   <AddCircleIcon />
+               </IconButton>
+            </Link>
         </Box>
     </Box>
         

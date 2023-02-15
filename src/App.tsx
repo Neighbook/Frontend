@@ -15,6 +15,7 @@ import {
 import {AuthenticatedLayout} from './views/AuthenticatedLayout';
 import {createTheme, ThemeProvider} from "@mui/material";
 import {AuthProvider} from "./components/AuthProvider";
+import {PostOffre} from "./views/PostOffre";
 
 
 const theme = createTheme({
@@ -49,6 +50,7 @@ const App = () => {
                 <Routes>
                     <Route index element={<AuthenticatedLayout><Acceuil /></AuthenticatedLayout>} />
                     <Route path="marketplace" element={<Marketplace />} />
+                    <Route path="marketplace/new" element={<PostOffre />} />
                     <Route path="social" element={<Social />} />
                     <Route path="messagerie" element={<AuthenticatedLayout><Messagerie /></AuthenticatedLayout>} />
                     <Route path="compte" element={<AuthenticatedLayout><Compte /></AuthenticatedLayout>} />
