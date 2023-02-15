@@ -35,32 +35,34 @@ export interface Post {
   ncommentaires: number;
   reactionUtilisateur: number;
   images: Array<Image>;
-  evenement: Event;
+  evenement: {};
   nombreReactions: NombreReactions;
   repost: Post | null;
 }
 
 export interface Event {
-    id: string;
-    titre: string;
-    dateEvenement: Date;
-    longitude: number;
-    latitude: number;
-    adresse: string;
-    dateDeCreation: Date;
-    dateDeModification: Date;
+    id?: string;
+    titre?: string;
+    dateEvenement?: Date;
+    longitude?: number;
+    latitude?: number;
+    adresse?: string;
+    dateDeCreation?: Date;
+    dateDeModification?: Date;
     dateDeSuppression?: Date;
 }
 
 export const addPost = async (
     titre: string,
     description: string,
-    idRepost: string | null
+    idRepost: string | null,
+    idEvent: string | null
 ): Promise<Post> => {
     const apiRes = await socialApi.post("post", {
         titre,
         description,
-        idRepost
+        idRepost,
+        idEvenement: idEvent
     });
     if (apiRes.status === 200) {
         return apiRes.data as Post;
@@ -84,6 +86,23 @@ export const addPostImage = async (postId: string, file: File): Promise<Image> =
         return apiRes.data as Image;
     }
     throw Error('error while uploading file');
+};
+
+export const addEvent = async (
+    titre: string,
+    dateEvenement: Date,
+    adresse: string
+): Promise<Event> => {
+    const date = dateEvenement.toISOString();
+    const apiRes = await socialApi.post("event", {
+        titre,
+        dateEvenement: date,
+        adresse
+    });
+    if (apiRes.status === 200) {
+        return apiRes.data as Event;
+    }
+    throw Error("Error creating event");
 };
 
 export const getFeed = async (signal: GenericAbortSignal): Promise<Array<Post> | null> => {

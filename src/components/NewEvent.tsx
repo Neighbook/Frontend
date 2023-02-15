@@ -10,9 +10,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import type {Image, Post} from "../hook/social";
-import {addPost, addPostImage} from "../hook/social";
+import {addEvent, addPost, addPostImage} from "../hook/social";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import {SocialPost} from "./SocialPost";
+import EventForm from "./EventForm";
 
 interface EditedPost{
     titre: string
@@ -46,20 +47,33 @@ export const NewEvent = ({open, handleClose, repost, onPost}: props) => {
     const fileRef = useRef<Array<(HTMLInputElement | null)>>(Array(4));
     const [files, setFiles] = useState<Array<(File | null)>>([null, null, null, null]);
     const [imgUrls, setImgUrls] = useState<Array<string>>(["", "", "", ""]);
+    const [showEventForm, setShowEventForm] = useState<boolean>(false);
+    const [event, setEvent] = useState<{titre: string, dateEvenement: Date, adresse: string}>(
+        {titre: '', dateEvenement: new Date(), adresse: ''}
+    );
 
-    const handleSubmit = () => {
-        if(!formData.titre){
+    const handleSubmit = async () => {
+        let newEventId: string | null = null;
+        if (!formData.titre) {
             setError(true);
             return;
         }
         setLoading(0);
+        if (showEventForm) {
+            console.log(showEventForm);
+            await addEvent(event.titre, event.dateEvenement, event.adresse).then((e) => {
+                newEventId = e.id ?? null;
+                setEvent({titre: '', dateEvenement: new Date(), adresse: ''});
+            }).catch(() => null);
+
+        }
         let newPost: Post;
-        addPost(formData.titre, formData.description, repost?.id ?? null)
+        addPost(formData.titre, formData.description, repost?.id ?? null, newEventId)
             .then((post) => {
-                newPost=post;
-                post.repost=repost;
-                Promise.all(files.map(async (file): Promise<Image | null>=>{
-                    if(file) {
+                newPost = post;
+                post.repost = repost;
+                Promise.all(files.map(async (file): Promise<Image | null> => {
+                    if (file) {
                         let img = null;
                         await addPostImage(post.id, file).then((r) => {
                             img = r;
@@ -68,20 +82,20 @@ export const NewEvent = ({open, handleClose, repost, onPost}: props) => {
                         return img;
                     }
                     return null;
-                })).then((images)=>{
-                    newPost.images = images.filter(i=>i!==null) as Array<Image>;
+                })).then((images) => {
+                    newPost.images = images.filter(i => i !== null) as Array<Image>;
                     onPost(newPost);
                     setFiles([null, null, null, null]);
                     setImgUrls(["", "", "", ""]);
                     setLoading(-1);
-                    fileRef.current.forEach(c=>{
-                        if(c !== null){
-                            c.value="";
+                    fileRef.current.forEach(c => {
+                        if (c !== null) {
+                            c.value = "";
                         }
                     });
                     setSuccess(true);
                     handleClose();
-                }).catch(()=>null);
+                }).catch(() => null);
             })
             .catch((err) => {
                 setLoading(-1);
@@ -112,6 +126,10 @@ export const NewEvent = ({open, handleClose, repost, onPost}: props) => {
         const urlsCopy = [...imgUrls];
         urlsCopy[index] = URL.createObjectURL(file);
         setImgUrls(urlsCopy);
+    };
+
+    const handleShowForm = () => {
+        setShowEventForm(!showEventForm);
     };
 
     return (
@@ -169,6 +187,7 @@ export const NewEvent = ({open, handleClose, repost, onPost}: props) => {
                             variant="standard"
                             sx={{mb: 3}}
                         />
+                        <EventForm e={event} setEvent={setEvent} showForm={showEventForm} setShowForm={handleShowForm}></EventForm>
                         {repost===null?<Grid container rowSpacing={{xs: 1, sm: 2, md: 3}} columnSpacing={{xs: 1, sm: 2, md: 3}}>
                             {imgUrls.map((img, i) => <Grid item xs={6} key={`img${i}`}>
                                 <Box sx={{
@@ -198,7 +217,7 @@ export const NewEvent = ({open, handleClose, repost, onPost}: props) => {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={()=>{handleSubmit();}}>
+                    <Button onClick={()=>{handleSubmit().catch(()=>null);}}>
                     Publier
                     </Button>
                 </DialogActions>
