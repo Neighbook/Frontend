@@ -35,20 +35,34 @@ export interface Post {
   ncommentaires: number;
   reactionUtilisateur: number;
   images: Array<Image>;
-  evenement: {};
+  evenement?: Event;
   nombreReactions: NombreReactions;
   repost: Post | null;
+}
+
+export interface Event {
+    id?: string;
+    titre?: string;
+    dateEvenement?: Date;
+    longitude?: number;
+    latitude?: number;
+    adresse?: string;
+    dateDeCreation?: Date;
+    dateDeModification?: Date;
+    dateDeSuppression?: Date;
 }
 
 export const addPost = async (
     titre: string,
     description: string,
-    idRepost: string | null
+    idRepost: string | null,
+    idEvent: string | null
 ): Promise<Post> => {
     const apiRes = await socialApi.post("post", {
         titre,
         description,
-        idRepost
+        idRepost,
+        idEvenement: idEvent
     });
     if (apiRes.status === 200) {
         return apiRes.data as Post;
@@ -74,6 +88,23 @@ export const addPostImage = async (postId: string, file: File): Promise<Image> =
     throw Error('error while uploading file');
 };
 
+export const addEvent = async (
+    titre: string,
+    dateEvenement: Date,
+    adresse: string
+): Promise<Event> => {
+    const date = dateEvenement.toISOString();
+    const apiRes = await socialApi.post("event", {
+        titre,
+        dateEvenement: date,
+        adresse
+    });
+    if (apiRes.status === 200) {
+        return apiRes.data as Event;
+    }
+    throw Error("Error creating event");
+};
+
 export const getFeed = async (signal: GenericAbortSignal): Promise<Array<Post> | null> => {
     const apiRes = await socialApi.get("feed", {signal: signal});
     if(apiRes.status === 200){
@@ -84,6 +115,21 @@ export const getFeed = async (signal: GenericAbortSignal): Promise<Array<Post> |
 
 export const getUserPosts = async (userId: string, signal: GenericAbortSignal): Promise<Array<Post> | null> => {
     const apiRes = await socialApi.get("posts", {signal: signal, params: {userId}});
+    if(apiRes.status === 200){
+        return apiRes.data as Array<Post>;
+    }
+    return null;
+};
+
+export const getLocationFeed = async (
+    distance: number, longitude: number, latitude: number, signal: GenericAbortSignal
+): Promise<Array<Post> | null> => {
+    const apiRes = await socialApi.get("localisationFeed",
+        {
+            signal: signal,
+            params: {distance: distance, longitude: longitude, latitude: latitude}
+        });
+    console.log(apiRes);
     if(apiRes.status === 200){
         return apiRes.data as Array<Post>;
     }
