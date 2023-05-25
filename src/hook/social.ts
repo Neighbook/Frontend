@@ -35,7 +35,7 @@ export interface Post {
   ncommentaires: number;
   reactionUtilisateur: number;
   images: Array<Image>;
-  evenement: {};
+  evenement?: Event;
   nombreReactions: NombreReactions;
   repost: Post | null;
 }

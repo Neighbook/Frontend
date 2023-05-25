@@ -6,7 +6,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 
 interface props {
     event: Event;
-    sx: {}
+    sx?: {}
 }
 
 export const EventItem = ({event, sx}: props) => {

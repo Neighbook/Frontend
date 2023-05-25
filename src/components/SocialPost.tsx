@@ -25,6 +25,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import {relativeDateComment} from "../utils/Date";
 import {UserAvatar} from "./UserAvatar";
 import defaultPfp from "/asset/images/pfp.png";
+import {EventItem} from "./EventItem";
 
 interface props{
     post: Post
@@ -121,6 +122,7 @@ export const SocialPost = ({post, sx={}, fullSize=false, embedded=false, onPostR
                     <Typography variant="body2" color="text.secondary" mb={3}>
                         {post.description}
                     </Typography>
+                    {post.evenement && <EventItem event={post.evenement}/>}
                     {post.repost&&<SocialPost post={post.repost} embedded disabled={disabled}/>}
                 </>
             </CardContent>
