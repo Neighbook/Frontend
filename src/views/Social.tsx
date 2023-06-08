@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {Box, Button, Container, Slider, Tab, Tabs} from "@mui/material";
 import { SocialPost } from "../components/SocialPost";
 import type { Post } from "../hook/social";
+import type { UserStory } from "../hook/social";
 import {getFeed, getLocationFeed, getPost, removePost} from "../hook/social";
 import {useNavigate, useParams} from "react-router";
 import { PostComments } from "../components/PostComments";
@@ -10,10 +11,13 @@ import {NewEvent} from "../components/NewEvent";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Feed from "../components/Feed";
 import Typography from "@mui/material/Typography";
+import StoriesCarousel from "../components/StoriesCarousel";
 
 const Social = () => {
     const { postId } = useParams();
+    const { userStoryId} = useParams();
     const [post, setPost] = useState<Post | null>(null);
+    const [userStory, setUserStory] = useState<Post | null>(null);
     const [repost, setRepost] = useState<Post | null>(null);
     const [newPostModal, setNewPostModal] = useState(false);
     const [feed, setFeed] = useState<Array<Post> | null>(null);
@@ -105,6 +109,16 @@ const Social = () => {
         );
     };
 
+    const renderUserStory = (userStory: UserStory) => {
+        return (
+          <Stories
+            stories={userStory.instaStoriesObject}
+            defaultInterval={1500}
+            width={432}
+            height={768}
+          />
+        );
+      };
     const onTabValueChange = (event: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     };
@@ -121,6 +135,7 @@ const Social = () => {
 
     return (
         <Container component="main" maxWidth="md">
+            <StoriesCarousel></StoriesCarousel>
             <Box
                 sx={{
                     display: 'flex',
