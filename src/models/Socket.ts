@@ -1,6 +1,10 @@
 export interface MessageEventData {
   roomId: string;
-  message: string;
+  senderId: string;
+  receiverId: string;
+  isRoomMessage: boolean;
+  content: string;
+  date: Date;
 }
 
 export interface ConnectionEventData {
