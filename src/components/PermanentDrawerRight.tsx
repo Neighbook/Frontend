@@ -160,13 +160,12 @@ export default function PermanentDrawerRight({friends, onSelect}: Props) {
                                 )}
                                 MenuProps={MenuProps}
                             >
-                                {names.map((name) => (
+                                {friends.map((friend, index) => (
                                     <MenuItem
-                                        key={name}
-                                        value={name}
-                                        style={getStyles(name, personName, theme)}
+                                        key={index}
+                                        value={friend.nom}
                                     >
-                                        {name}
+                                        {friend.nom} {friend.prenom}
                                     </MenuItem>
                                 ))}
                             </Select>

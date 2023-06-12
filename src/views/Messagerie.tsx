@@ -31,7 +31,7 @@ const Messagerie = () => {
 
     useEffect(() => {
         if(currentUser && currentUser.id) {
-            socket.current = io("http://localhost:3000", {
+            socket.current = io("https://demo.neighbook.tech", {
                 transports: ["websocket"],
             });
             socket.current.on("connect", () => {
