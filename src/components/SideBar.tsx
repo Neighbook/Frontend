@@ -36,7 +36,7 @@ const SideBarItem = ({icon, text, url}: SidebarItemProps) => (
 );
 
 export default function SideBar() {
-    const {onLogout} = useAuth();
+    const {onLogout, currentUser} = useAuth();
 
     const handleClick = () => {
         onLogout();
@@ -55,6 +55,7 @@ export default function SideBar() {
             </List>
             <List style={{ marginTop: `auto` }} >
                 <SideBarItem icon={account} text="Mon compte" url="/compte"/>
+                Connecté en tant que {currentUser?.firstname}
                 <ListItem>
                     <Button variant="contained"
                         fullWidth

@@ -15,7 +15,7 @@ export default function ChatRoom({ receiver, messages, sendMessage }: Props) {
     const [draft, setDraft] = useState<String>('');
 
     const send = () => {
-        sendMessage(draft);
+        sendMessage(draft, receiver);
         setDraft('');
     };
 

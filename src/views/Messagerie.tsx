@@ -12,6 +12,7 @@ import type { ClientToServerEvents, ServerToClientEvents } from "../models/Socke
 interface Message {
     sender: string;
     message: string;
+    receiver: string;
 }
 
 const Messagerie = () => {
@@ -19,10 +20,12 @@ const Messagerie = () => {
     const [chattingWith, setChatWith] = useState<User|null>(null);
     const [friends, setFriends] = useState<User[]>([]);
     const [messages, _setMessages] = useState<Array<Message>>([]);
+    const [filteredMessages, setFilteredMessages] = useState<Array<Message>>([]);
     const _messages = useRef<Array<Message>>([]);
     const setMessages = (data: Array<Message>) => {
         _messages.current = data;
         _setMessages(data);
+        console.log(_messages.current)
     };
 
     const [roomId, setRoomId] = useState<string>("");
@@ -31,7 +34,7 @@ const Messagerie = () => {
 
     useEffect(() => {
         if(currentUser && currentUser.id) {
-            socket.current = io("http://localhost:3000", {
+            socket.current = io("https://demo.neighbook.tech", {
                 transports: ["websocket"],
             });
             socket.current.on("connect", () => {
@@ -39,6 +42,8 @@ const Messagerie = () => {
                     if(list && list.length) {
                         setFriends(list);
                         startChattingWith(list[0]);
+
+                     
                     }
                 }).catch(e => console.log(e));
             });
@@ -53,7 +58,7 @@ const Messagerie = () => {
 
             socket.current.on("messageReceived", (data) => {
                 if(data) {
-                    setMessages([..._messages.current, { sender: 'him', message: data.message }]);
+                    setMessages([..._messages.current, { sender: 'him', message: data.message, receiver: chattingWith?.id || "" }]);
                 }
             });
             // socket.current.onAny((event, ...args) => {
@@ -78,16 +83,25 @@ const Messagerie = () => {
             receiverId: friend.id,
             senderId: currentUser.id,
         });
+        console.log(friend)
         setChatWith(friend);
+        //setMessages getMessagesByFriend(friend.id)
+        setFilteredMessages(_messages.current.filter(function(el){
+            return el.receiver== friend.id
+        }))
+        console.log(filteredMessages)
     };
 
-    const sendMessage = (msg: string) => {
+    const sendMessage = (msg: string, friend: User) => {
         if(socket.current) {
-            setMessages([...messages, { sender: 'me', message: msg}]);
+            setMessages([...messages, { sender: 'me', message: msg, receiver: chattingWith?.id || "" }]);
             socket.current.emit("messageSended", {
                 roomId: roomId,
                 message: msg
             });
+            setFilteredMessages(_messages.current.filter(function(el){
+                return el.receiver== friend.id
+            }))
         }
     };
 
@@ -98,7 +112,7 @@ const Messagerie = () => {
                     chattingWith &&
                     <>
                         <ChatProfile photo={chattingWith.photo} nom={chattingWith.nom} prenom={chattingWith.prenom} />
-                        <ChatRoom sendMessage={sendMessage} receiver={chattingWith} messages={messages} />
+                        <ChatRoom sendMessage={sendMessage} receiver={chattingWith} messages={filteredMessages} />
                     </>
                 }
             </Box>
