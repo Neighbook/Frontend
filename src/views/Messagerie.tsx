@@ -94,7 +94,7 @@ const Messagerie = () => {
             content: msg,
             date: new Date(),
             isRoomMessage: false,
-            receiverId: chattingWith.id,
+            receiverOrRoomId: chattingWith.id,
             senderId: currentUser.id,
         });
     };
