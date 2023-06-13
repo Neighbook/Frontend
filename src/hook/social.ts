@@ -43,7 +43,7 @@ export interface Post {
 export interface Event {
     id?: string;
     titre?: string;
-    dateEvenement?: Date;
+    dateEvenement: Date;
     longitude?: number;
     latitude?: number;
     adresse?: string;
