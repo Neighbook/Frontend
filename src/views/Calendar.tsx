@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import {Box, Button, Container} from "@mui/material";
 import { SocialPost } from "../components/SocialPost";
 import type { Post } from "../hook/social";
-import {getFeed, getPost, removePost, getEvents} from "../hook/social";
+import {getFeed, getPost, removePost, getEvents,getEvent } from "../hook/social";
 import {useNavigate, useParams} from "react-router";
 import { PostComments } from "../components/PostComments";
 import {FeedLoading} from "../components/Loading";
@@ -31,13 +31,15 @@ const Calendar = () => {
 
     useEffect(() => {
         const controller = new AbortController();
-        getEvents(controller.signal)
+        getFeed(controller.signal)
             .then((res) => {
-                res?.forEach(ev => {
-                    if (calendarRef.current){
-                        setEven([...even,{title: ev.titre, start: ev.dateDeCreation}]);
+                const  eventArray: object[] = [];
+                res?.forEach(post=>{
+                    if (calendarRef.current && post.evenement !== null){
+                        eventArray.push({title: post.evenement?.titre , start: post.evenement?.dateEvenement});
                     }
                 });
+                setEven(eventArray);
             })
             .catch(() => null);
         return () => {
