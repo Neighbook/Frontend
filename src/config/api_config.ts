@@ -5,4 +5,5 @@ export const config = {
     users_route: "/users",
     social_route: "/social",
     file_route: "/file",
+    messagerie_route: "/messagerie",
 };

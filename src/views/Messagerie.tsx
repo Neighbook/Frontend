@@ -8,6 +8,7 @@ import ChatProfile from "../components/ChatProfile";
 import io, { type Socket } from "socket.io-client";
 import ChatRoom from "../components/ChatRoom";
 import type { ClientToServerEvents, ServerToClientEvents } from "../models/Socket";
+import { createGroup } from "../hook/messagerie";
 
 interface Message {
   sender: string;
@@ -30,12 +31,13 @@ const Messagerie = () => {
     const socket = useRef<Socket<ServerToClientEvents, ClientToServerEvents> | null>(null);
 
     useEffect(() => {
+        const controller = new AbortController();
         if (currentUser && currentUser.id) {
             socket.current = io("http://localhost:3000", {
                 transports: ["websocket"],
             });
             socket.current.on("connect", () => {
-                getUsers()
+                getUsers(controller.signal)
                     .then((list) => {
                         if (list && list.length) {
                             setFriends(list);
@@ -68,6 +70,7 @@ const Messagerie = () => {
                 socket.current.off("disconnect");
                 socket.current.off("messageReceived");
             }
+            controller.abort();
         };
     }, [currentUser]);
 
@@ -103,6 +106,9 @@ const Messagerie = () => {
                     <>
                         <ChatProfile photo={chattingWith.photo} nom={chattingWith.nom} prenom={chattingWith.prenom} />
                         <ChatRoom sendMessage={sendMessage} receiver={chattingWith} messages={messages} />
+                        <button onClick={() => {
+                            createGroup("asdasdas", ["123", "123", "123"]);
+                        }}> test</button>
                     </>
                 )}
             </Box>
