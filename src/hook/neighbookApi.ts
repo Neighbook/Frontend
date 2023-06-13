@@ -46,3 +46,4 @@ export const userApi = neighbookApi.getInstance(config.user_route);
 export const usersApi = neighbookApi.getInstance(config.users_route);
 export const fileApi = neighbookApi.getInstance(config.file_route);
 export const socialApi = neighbookApi.getInstance(config.social_route);
+export const messagerieApi = neighbookApi.getInstance(config.messagerie_route);
