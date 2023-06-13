@@ -7,3 +7,4 @@ export { default as Compte } from './Compte';
 export { default as Login } from './Login';
 export { default as Register } from './Register';
 export { default as UserView } from './User';
+export { default as Calendar } from './Calendar';

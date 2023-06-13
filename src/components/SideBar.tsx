@@ -12,6 +12,7 @@ import home from '/asset/images/home.svg';
 import marketplace from '/asset/images/marketplace.svg';
 import social from '/asset/images/social.svg';
 import messagerie from '/asset/images/messagerie.svg';
+import calendar from '/asset/images/calendar.png';
 import account from '/asset/images/account.svg';
 import logout from '/asset/images/logout.svg';
 import menuburger from '/asset/images/menuburger.svg';
@@ -31,7 +32,7 @@ const SideBarItem = ({icon, text, url}: SidebarItemProps) => (
     <ListItem>
         <Link to={url} className="sidebar-link">
             <ListItemButton>
-                <ListItemIcon sx={{ mr: 0.5 }}><img src={icon} alt={text}/></ListItemIcon>
+                <ListItemIcon sx={{ mr: 0.5, height: "3rem", aspectRatio: 1 }}><img src={icon} alt={text}/></ListItemIcon>
                 <ListItemText primary={text}/>
             </ListItemButton>
         </Link>
@@ -70,6 +71,7 @@ export default function SideBar({onToggle }: SideBarProps ) {
                 <SideBarItem icon={social} text="Social" url="/social"/>
                 <SideBarItem icon={marketplace} text="Marketplace" url="/marketplace"/>
                 <SideBarItem icon={messagerie} text="Messagerie" url="/messagerie"/>
+                <SideBarItem icon={calendar} text="Calendrier" url="/calendar"/>
             </List>
             <List style={{ marginTop: `auto` }} >
                 <SideBarItem icon={account} text="Mon compte" url="/compte"/>
