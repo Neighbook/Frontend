@@ -51,6 +51,8 @@ export const NewEvent = ({open, handleClose, repost, onPost}: props) => {
     const [event, setEvent] = useState<{titre: string, dateEvenement: Date, adresse: string}>(
         {titre: '', dateEvenement: new Date(), adresse: ''}
     );
+    const maxTitleLength = 100;
+    const remainingTitleChars = maxTitleLength - formData.titre.length; // Nombre de caractères restants
 
     const handleSubmit = async () => {
         let newEventId: string | null = null;
@@ -104,10 +106,20 @@ export const NewEvent = ({open, handleClose, repost, onPost}: props) => {
     };
 
     const handleFormChange = (event: React.ChangeEvent<HTMLFormElement>) => {
-        updateFormData({
-            ...formData,
-            [event.target.name]: event.target.value as string,
-        });
+        const { value } = event.target;
+        if(event.target.name === "titre") {
+            if(value !== '' && (value as string).length <= maxTitleLength) {
+                updateFormData({
+                    ...formData,
+                    [event.target.name]: event.target.value as string,
+                });
+            }
+        } else {
+            updateFormData({
+                ...formData,
+                [event.target.name]: event.target.value as string,
+            });
+        }
     };
 
     const handleUploadClick = (index: number) => {
@@ -141,7 +153,7 @@ export const NewEvent = ({open, handleClose, repost, onPost}: props) => {
                 }}
                 open={open}
                 fullWidth
-                maxWidth="md"
+                maxWidth="sm"
             >
                 <DialogTitle sx={{ m: 0, p: 2}}>
                     {repost!==null?"Respoter la publication":"Nouvelle publication"}
@@ -167,7 +179,13 @@ export const NewEvent = ({open, handleClose, repost, onPost}: props) => {
                             fullWidth
                             label="Titre"
                             error={error}
-                            helperText={error&&"Titre obligatoire"}
+                            helperText={error ? "Titre obligatoire" : <span style={{ color: remainingTitleChars < 10 ? 'red' : 'inherit' }}>
+                                {remainingTitleChars} caractères restants
+                            </span>
+                            }
+                            inputProps={{
+                                maxLength: maxTitleLength,
+                            }}
                             InputLabelProps={{
                                 shrink: true,
                             }}

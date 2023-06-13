@@ -24,6 +24,7 @@ const EventForm = ({e, setEvent, showForm=false, setShowForm, sx}: props) => {
     const [eventRue, setEventRue] = useState<string>('');
     const [eventCodePostal, setEventCodePostal] = useState<string>('');
     const [eventVille, setEventVille] = useState<string>('');
+    const maxTitleLength = 100;
 
 
     const [error] = useState<boolean>(false);
@@ -60,11 +61,14 @@ const EventForm = ({e, setEvent, showForm=false, setShowForm, sx}: props) => {
     }, [showForm]);
 
     const handleTitreChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if(event.target.value !== '') {
-            setEventTitle(event.target.value);
+        const { value } = event.target;
+        if(value !== '' && value.length <= maxTitleLength) {
+            setEventTitle(value);
             sendEvent();
         }
     };
+
+    const remainingTitleChars = maxTitleLength - eventTitle.length; // Nombre de caractères restants
 
     const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setEventNumber(event.target.value);
@@ -98,7 +102,13 @@ const EventForm = ({e, setEvent, showForm=false, setShowForm, sx}: props) => {
                         fullWidth
                         label="Titre"
                         error={error}
-                        helperText={error&&"Titre obligatoire"}
+                        helperText={error ? "Titre obligatoire" : <span style={{ color: remainingTitleChars < 10 ? 'red' : 'inherit' }}>
+                            {remainingTitleChars} caractères restants
+                        </span>
+                        }
+                        inputProps={{
+                            maxLength: maxTitleLength,
+                        }}
                         InputLabelProps={{
                             shrink: true,
                         }}
