@@ -12,9 +12,11 @@ export interface ConnectionEventData {
   receiverId: string;
 }
 
+export interface GroupConnectionEventData {
+  roomId: string;
+}
+
 export interface RoomCreatedEventData {
-  senderId: string;
-  receiverId: string;
   roomId: string;
 }
 
@@ -26,6 +28,7 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
   connectToSomeone: (event: ConnectionEventData) => void;
+  connectToGroup: (event: GroupConnectionEventData) => void;
   messageSended: (event: MessageEventData) => void;
 }
 
