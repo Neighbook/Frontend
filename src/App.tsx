@@ -50,8 +50,7 @@ const App = () => {
                     <Route index element={<AuthenticatedLayout><Acceuil /></AuthenticatedLayout>} />
                     <Route path="marketplace" element={<AuthenticatedLayout><Marketplace /></AuthenticatedLayout>} />
                     <Route path="social" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
-                    {/* <Route path="messagerie" element={<AuthenticatedLayout><Messagerie /></AuthenticatedLayout>} /> */}
-                    <Route path="messagerie" element={<Messagerie />} />
+                    <Route path="messagerie" element={<AuthenticatedLayout><Messagerie /></AuthenticatedLayout>} />
                     <Route path="compte" element={<AuthenticatedLayout><Compte /></AuthenticatedLayout>} />
                     <Route path="user/:userId" element={<AuthenticatedLayout><UserView /></AuthenticatedLayout>} />
                     <Route path="post/:postId" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
