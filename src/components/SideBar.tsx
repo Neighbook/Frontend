@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
+import { slide as Menu } from 'react-burger-menu';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -14,6 +14,8 @@ import social from '/asset/images/social.svg';
 import messagerie from '/asset/images/messagerie.svg';
 import account from '/asset/images/account.svg';
 import logout from '/asset/images/logout.svg';
+import menuburger from '/asset/images/menuburger.svg';
+import anglecircleleft from '/asset/images/anglecircleleft.svg';
 import {Link} from "react-router-dom";
 import {Button, Divider} from "@mui/material";
 import {useAuth} from "./AuthProvider";
@@ -36,11 +38,22 @@ const SideBarItem = ({icon, text, url}: SidebarItemProps) => (
     </ListItem>
 );
 
-export default function SideBar() {
+interface SideBarProps {
+    onToggle: (isOpen: boolean) => void;
+}
+
+export default function SideBar({onToggle }: SideBarProps ) {
     const {onLogout} = useAuth();
 
     const handleClick = () => {
         onLogout();
+    };
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleStateChange = ({ isOpen }: { isOpen: boolean }) => {
+        setIsOpen(isOpen);
+        onToggle && onToggle(isOpen);
     };
 
     const drawer = (
@@ -52,7 +65,7 @@ export default function SideBar() {
                 <ListItem>
                     <UserSearch/>
                 </ListItem>
-                <Divider sx={{mt: 2, mb: 2}} />
+                <Divider sx={{mt: 1, mb: 1}} />
                 <SideBarItem icon={home} text="Accueil" url="/"/>
                 <SideBarItem icon={social} text="Social" url="/social"/>
                 <SideBarItem icon={marketplace} text="Marketplace" url="/marketplace"/>
@@ -76,16 +89,32 @@ export default function SideBar() {
         </>
     );
 
+    useEffect(() => {
+        const buttonElement = document.getElementById('react-burger-menu-btn');
+        const content = document.querySelector('.bm-menu-wrap') as HTMLElement;
+        if (buttonElement) {
+            buttonElement.style.width = '30px';
+            buttonElement.style.height = '30px';
+        }
+        if (content) {
+            content.style.zIndex = '999';
+            content.style.transition = 'transform 1s ease';
+        }
+    }, []);
+
+    const burgerIcon = isOpen ? anglecircleleft : menuburger;
+
     return (
-        <Drawer
-            variant="permanent"
-            sx={{
-                width: 287,
-                flexShrink: 0,
-                [`& .MuiDrawer-paper`]: { width: 287, boxSizing: 'border-box', boxShadow: 4 },
-            }}
+        <Menu
+            noOverlay
+            customBurgerIcon={<img src={burgerIcon} alt="X"/>}
+            customCrossIcon={false}
+            menuClassName={ "side-bar" }
+            burgerBarClassName={ "bm-burger-button" }
+            isOpen={isOpen}
+            onStateChange={handleStateChange}
         >
             {drawer}
-        </Drawer>
+        </Menu>
     );
 }

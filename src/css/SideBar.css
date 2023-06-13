@@ -27,3 +27,15 @@
 .sidebar-logout img{
     margin-right: 1em;
 }
+
+.bm-burger-button{
+  width: 30px;
+  height: 30px;
+  position: fixed;
+  top: 10px; /* Ajustez cette valeur selon vos besoins */
+  left: 20px; /* Ajustez cette valeur selon vos besoins */
+  z-index: 1200; /* Assurez-vous que le bouton burger a un index de z supérieur pour être au-dessus du contenu */
+}
+.side-bar{
+  background: #ffffff;
+}

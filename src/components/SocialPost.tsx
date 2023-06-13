@@ -17,6 +17,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {Avatar, Fade, IconButton, ImageList, ImageListItem, Modal} from "@mui/material";
 import {useAuth} from "./AuthProvider";
+import '../css/SocialPost.css';
 import type {Post, NombreReactions} from "../hook/social";
 import {useNavigate} from "react-router";
 import {useState} from "react";
@@ -41,6 +42,9 @@ export const SocialPost = ({post, sx={}, fullSize=false, embedded=false, onPostR
     const {usersBase, currentUser} = useAuth();
     const navigate = useNavigate();
     const [openModal, setOpenModal] = useState<boolean>(false);
+    const [openedDesc, setOpenedDesc] = useState<boolean>(false);
+    const maxDescLength = 255;
+    const [bigDesc] = useState<boolean>(post.description.length > maxDescLength ? true : false);
     const [imgModal, setImgModal] = useState<string | null>(null);
     const [nombreReactions, setNombreReactions] = React.useState<NombreReactions>(post.nombreReactions);
     const [reactionUtilisateur, setReactionUtilisateur] = React.useState<Number|null>(post.reactionUtilisateur);
@@ -61,7 +65,24 @@ export const SocialPost = ({post, sx={}, fullSize=false, embedded=false, onPostR
         updateReaction(remove ? null : newReaction, post.id).then(() => null).catch(()=>null);
     };
 
+    const toggleDescription = () => {
+        setOpenedDesc(!openedDesc);
+    };
 
+    const smartTruncate = () => {
+        if(openedDesc) {
+            return post.description;
+        }
+        if (post.description.length > maxDescLength) {
+            const lastSpaceIndex = post.description.lastIndexOf(' ', maxDescLength);
+            if (lastSpaceIndex !== -1) {
+                return post.description.substring(0, lastSpaceIndex) + ' ...';
+            }
+            return post.description.substring(0, maxDescLength) + ' ...';
+        }
+        return '';
+    };
+    
     return (
         <Card onClick={(event) => {
             event.stopPropagation();
@@ -119,9 +140,18 @@ export const SocialPost = ({post, sx={}, fullSize=false, embedded=false, onPostR
             </CardMedia>}
             <CardContent>
                 <>
-                    <Typography variant="body2" color="text.secondary" mb={3}>
+                    {!bigDesc ? <Typography variant="body2" color="text.secondary" mb={3}>
                         {post.description}
-                    </Typography>
+                    </Typography> :
+                        <>
+                            <Typography variant="body2" color="text.secondary" mb={1}>
+                                {smartTruncate()}
+                            </Typography>
+                            <a onClick={toggleDescription}>
+                                {openedDesc ? 'Afficher moins' : 'Afficher plus'}
+                            </a>
+                        </>
+                    }
                     {post.evenement && <EventItem event={post.evenement}/>}
                     {post.repost&&<SocialPost post={post.repost} embedded disabled={disabled}/>}
                 </>

@@ -3,8 +3,7 @@ import SideBar from "../components/SideBar";
 import Box from "@mui/material/Box";
 import {useAuth} from "../components/AuthProvider";
 import {Navigate, useLocation} from "react-router";
-
-const drawerWidth = 280;
+import { useState } from 'react';
 
 interface Props{
     children: JSX.Element | string
@@ -14,6 +13,11 @@ export const AuthenticatedLayout = ({ children }: Props) => {
     const { isLoggedIn } = useAuth();
     const location = useLocation();
 
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const handleSidebarToggle = (isOpen: boolean) => {
+        setIsSidebarOpen(isOpen);
+    };
+
     if (!isLoggedIn()) {
         return <Navigate to="/login" replace state={{ from: location }} />;
     }
@@ -22,13 +26,19 @@ export const AuthenticatedLayout = ({ children }: Props) => {
         <Box sx={{display: 'flex'}}>
             <Box
                 component="nav"
-                sx={{width: {sm: 280}, flexShrink: {sm: 0}}}
+                sx={{
+                    width: isSidebarOpen ? { xs: 150, sm: 250, md: 287 } : 50,
+                    flexShrink: { sm: 0 },
+                }}
             >
-                <SideBar />
+                <SideBar onToggle={handleSidebarToggle} />
             </Box>
             <Box
                 component="main"
-                sx={{flexGrow: 1, p: 3, width: {sm: `calc(100% - ${drawerWidth}px)`}}}
+                sx={{
+                    flexGrow: 1,
+                    p: 3,
+                }}
             >
                 {children}
             </Box>

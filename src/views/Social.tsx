@@ -120,7 +120,7 @@ const Social = () => {
     };
 
     return (
-        <Container component="main" maxWidth="md">
+        <Container component="main" maxWidth="lg">
             <Box
                 sx={{
                     display: 'flex',
