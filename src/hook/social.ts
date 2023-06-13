@@ -129,6 +129,14 @@ export const getEvents = async (signal: GenericAbortSignal): Promise<Array<Event
     return null;
 };
 
+export const getEvent = async (userId: string,signal: GenericAbortSignal): Promise<Event | null> => {
+    const apiRes = await socialApi.get("event", {signal: signal, params:{id:userId}});
+    if(apiRes.status === 200){
+        return apiRes.data as Event;
+    }
+    return null;
+};
+
 export const getLocationFeed = async (
     distance: number, longitude: number, latitude: number, signal: GenericAbortSignal
 ): Promise<Array<Post> | null> => {

@@ -32,7 +32,7 @@ const SideBarItem = ({icon, text, url}: SidebarItemProps) => (
     <ListItem>
         <Link to={url} className="sidebar-link">
             <ListItemButton>
-                <ListItemIcon sx={{ mr: 0.5, height: "3rem", aspectRatio: 1 }}><img src={icon} alt={text}/></ListItemIcon>
+                <ListItemIcon sx={{ mr: 0.5, height: "2rem", aspectRatio: 1/1 }}><img src={icon} alt={text}/></ListItemIcon>
                 <ListItemText primary={text}/>
             </ListItemButton>
         </Link>
