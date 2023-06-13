@@ -106,9 +106,6 @@ const Messagerie = () => {
                     <>
                         <ChatProfile photo={chattingWith.photo} nom={chattingWith.nom} prenom={chattingWith.prenom} />
                         <ChatRoom sendMessage={sendMessage} receiver={chattingWith} messages={messages} />
-                        <button onClick={() => {
-                            createGroup("asdasdas", ["123", "123", "123"]);
-                        }}> test</button>
                     </>
                 )}
             </Box>
