@@ -64,7 +64,7 @@ const Messagerie = () => {
 
             socket.current.on("messageReceived", (data) => {
                 if (data.content) {
-                    setMessages([..._messages.current, { sender: "him", message: data.content }]);
+                    setMessages([..._messages.current, { senderId: data.senderId, content: data.content }]);
                 }
             });
             // socket.current.onAny((event, ...args) => {
@@ -107,7 +107,9 @@ const Messagerie = () => {
         const controller = new AbortController();
         getMessages(currentUser.id, target.id, controller.signal)
             .then(history => {
-                setMessages(history);
+                if(history) {
+                    setMessages(history);
+                }
             })
             .catch(e => {
                 console.log(e);
@@ -117,7 +119,7 @@ const Messagerie = () => {
 
     const sendMessage = (msg: string) => {
         if (!socket.current || !currentUser || !chattingWith) return;
-        setMessages([...messages, { sender: "me", message: msg }]);
+        setMessages([...messages, { senderId: currentUser.id, content: msg }]);
         socket.current.emit("messageSended", {
             roomId: roomId,
             content: msg,
@@ -139,7 +141,7 @@ const Messagerie = () => {
                         />
                         <ChatRoom
                             sendMessage={sendMessage}
-                            receiver={chattingWith}
+                            members={(chattingWith && chattingWith.idUtilisateurs) ? friends.filter(f => chattingWith.idUtilisateurs.includes(f.id)) : [chattingWith]}
                             messages={messages}
                         />
                     </>

@@ -1,17 +1,17 @@
 import { Typography, Box, TextField, Button } from "@mui/material";
 import type { User } from "../hook/user";
 import React, { useState } from 'react';
+import type { Message } from "../hook/messagerie";
+import { useAuth } from "./AuthProvider";
 
 type Props = {
-    receiver: User;
-    messages: Array<{
-        sender: string;
-        message: string;
-    }>;
+    members: Array<User>;
+    messages: Array<Message>;
     sendMessage: Function;
 }
 
-export default function ChatRoom({ receiver, messages, sendMessage }: Props) {
+export default function ChatRoom({ members, messages, sendMessage }: Props) {
+    const { currentUser } = useAuth();
     const [draft, setDraft] = useState<String>('');
 
     const send = () => {
@@ -46,16 +46,20 @@ export default function ChatRoom({ receiver, messages, sendMessage }: Props) {
                         <Box key={id} sx={{
                             width: '100%',
                             display: 'flex',
-                            justifyContent: msg.sender === 'me' ? 'flex-end' : 'flex-start'
+                            flexDirection: 'column',
+                            alignItems: msg.senderId === currentUser?.id ? 'flex-end' : 'flex-start'
                         }}>
+                            <Typography>
+                                {msg.senderId === currentUser?.id ? 'Moi' : members?.find(m => m.id === msg.senderId)?.prenom}
+                            </Typography>
                             <Box sx={{
-                                background: msg.sender === 'me' ? '#E4E6BF' : '#879472',
+                                background: msg.senderId === currentUser?.id ? '#E4E6BF' : '#879472',
                                 padding: '5px 10px',
                                 borderRadius: '5px',
                                 maxWidth: 'calc(100% - 50px)'
                             }}>
                                 <Typography variant="h6" fontWeight='bold' color='#64675A' noWrap component="div">
-                                    {msg.message}
+                                    {msg.content}
                                 </Typography>
                             </Box>
                             
