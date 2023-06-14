@@ -17,6 +17,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Modal from '@mui/material/Modal';
 import { Button, Fab, TextField } from '@mui/material';
 import type { User } from '../hook/user';
+import type { GroupRoom } from '../hook/messagerie';
 import { Theme, useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -32,7 +33,9 @@ const drawerWidth = 240;
 
 interface Props {
 	friends: Array<User>;
-    onSelect: Function;
+    groups: Array<GroupRoom>;
+    onSelectFriend: Function;
+    onSelectGroup: Function;
 }
 
 const modalStyle = {
@@ -82,7 +85,7 @@ const getStyles = (name: string, personName: Array<string>, theme: Theme) => {
 };
 
 
-export default function PermanentDrawerRight({friends, onSelect}: Props) {
+export default function PermanentDrawerRight({friends, groups, onSelectFriend, onSelectGroup}: Props) {
     const [modalOpen, setModalOpen] = React.useState(false);
     const handleModalOpen = () => setModalOpen(true);
     const handleModalClose = () => setModalOpen(false);
@@ -105,7 +108,11 @@ export default function PermanentDrawerRight({friends, onSelect}: Props) {
 
     const handleNewGroupCreation = async ( name: string, members: Array<string> ) => {
         //TODO call backend to create group, add group to right panel
-        const res = await createGroup(name, [...members, currentUser?.id]);
+        const prepared = members;
+        if(currentUser) {
+            prepared.push(currentUser.id);
+        }
+        await createGroup(name, prepared);
 
         setPersonName([]);
         setModalOpen(false);
@@ -189,8 +196,28 @@ export default function PermanentDrawerRight({friends, onSelect}: Props) {
                     </Box>
                 </Modal>
                 <List>
+                    {
+                        groups.map((group, index) => (
+                            <ListItem key={group.name} disablePadding onClick={() => {onSelectGroup(group);}}>
+                                <ListItemButton>
+                                    <img
+                                        style={{
+                                            marginRight: '10px',
+                                            clipPath: 'circle()',
+                                            borderRadius: '100%',
+                                            border: '1.5px solid black'
+                                        }}
+                                        src={'https://cdn-icons-png.flaticon.com/128/1769/1769041.png'}
+                                        alt={group.name}
+                                        width={30}
+                                    />
+                                    <ListItemText primary={group.name} />
+                                </ListItemButton>
+                            </ListItem>
+                        ))
+                    }
                     {friends.map((friend, index) => (
-                        <ListItem key={friend.nom} disablePadding onClick={() => {onSelect(friend);}}>
+                        <ListItem key={friend.nom} disablePadding onClick={() => {onSelectFriend(friend);}}>
                             <ListItemButton>
                                 <img
                                     style={{ marginRight: '10px', clipPath: 'circle()' }}
