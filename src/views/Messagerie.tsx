@@ -8,12 +8,8 @@ import ChatProfile from "../components/ChatProfile";
 import io, { type Socket } from "socket.io-client";
 import ChatRoom from "../components/ChatRoom";
 import type { ClientToServerEvents, ServerToClientEvents } from "../models/Socket";
-import { GroupRoom, getGroups } from "../hook/messagerie";
-
-interface Message {
-  sender: string;
-  message: string;
-}
+import { GroupRoom, getGroups, getMessages } from "../hook/messagerie";
+import type { Message } from "../hook/messagerie";
 
 const Messagerie = () => {
     const { currentUser } = useAuth();
@@ -106,6 +102,17 @@ const Messagerie = () => {
             roomId: target.id
         });
         setChatWith(target);
+
+        // fetch messages history
+        const controller = new AbortController();
+        getMessages(currentUser.id, target.id, controller.signal)
+            .then(history => {
+                setMessages(history);
+            })
+            .catch(e => {
+                console.log(e);
+            });
+        
     };
 
     const sendMessage = (msg: string) => {

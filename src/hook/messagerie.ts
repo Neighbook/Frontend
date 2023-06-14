@@ -7,6 +7,15 @@ export interface GroupRoom {
     idUtilisateurs: Array<string>;
 }
 
+export interface Message {
+    idMessage: number;
+    senderId: string;
+    receiverOrRoomId: string;
+    isRoomMessage: boolean;
+    content: string;
+    date: string;
+}
+
 export const createGroup = async (
     groupName: string,
     idUtilisateurs: Array<string>,
@@ -30,7 +39,7 @@ export const getGroups = async (userId: string, signal: GenericAbortSignal): Pro
     return null;
 };
 
-export const getMessages = async (userId: string, receiverOrRoomId: string, signal: GenericAbortSignal): Promise<Array<GroupRoom> | null> => {
+export const getMessages = async (userId: string, receiverOrRoomId: string, signal: GenericAbortSignal): Promise<Array<Message> | null> => {
     const apiRes = await messagerieApi.get("messages", {
         signal: signal, 
         params: {
@@ -39,8 +48,7 @@ export const getMessages = async (userId: string, receiverOrRoomId: string, sign
         }}
     );
     if(apiRes.status === 200){
-        console.log(apiRes.data);
-        return apiRes.data as Array<GroupRoom>;
+        return apiRes.data as Array<Message>;
     }
     return null;
 };
