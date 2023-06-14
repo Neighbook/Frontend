@@ -43,7 +43,7 @@ export interface Post {
 export interface Event {
     id?: string;
     titre?: string;
-    dateEvenement?: Date;
+    dateEvenement: Date;
     longitude?: number;
     latitude?: number;
     adresse?: string;
@@ -117,6 +117,22 @@ export const getUserPosts = async (userId: string, signal: GenericAbortSignal): 
     const apiRes = await socialApi.get("posts", {signal: signal, params: {userId}});
     if(apiRes.status === 200){
         return apiRes.data as Array<Post>;
+    }
+    return null;
+};
+
+export const getEvents = async (signal: GenericAbortSignal): Promise<Array<Event> | null> => {
+    const apiRes = await socialApi.get("events", {signal: signal});
+    if(apiRes.status === 200){
+        return apiRes.data as Array<Event>;
+    }
+    return null;
+};
+
+export const getEvent = async (userId: string,signal: GenericAbortSignal): Promise<Event | null> => {
+    const apiRes = await socialApi.get("event", {signal: signal, params:{id:userId}});
+    if(apiRes.status === 200){
+        return apiRes.data as Event;
     }
     return null;
 };

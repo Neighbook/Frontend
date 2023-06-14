@@ -9,7 +9,7 @@ import {
     PageNotFound,
     Acceuil,
     Messagerie,
-    Social, Login, Compte, Register, UserView
+    Social, Login, Compte, Register, UserView, Calendar
 } from './views';
 
 import {AuthenticatedLayout} from './views/AuthenticatedLayout';
@@ -50,6 +50,7 @@ const App = () => {
                     <Route index element={<AuthenticatedLayout><Acceuil /></AuthenticatedLayout>} />
                     <Route path="marketplace" element={<AuthenticatedLayout><Marketplace /></AuthenticatedLayout>} />
                     <Route path="social" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
+                    <Route path="calendar" element={<AuthenticatedLayout><Calendar /></AuthenticatedLayout>} />
                     <Route path="messagerie" element={<AuthenticatedLayout><Messagerie /></AuthenticatedLayout>} />
                     <Route path="compte" element={<AuthenticatedLayout><Compte /></AuthenticatedLayout>} />
                     <Route path="user/:userId" element={<AuthenticatedLayout><UserView /></AuthenticatedLayout>} />
