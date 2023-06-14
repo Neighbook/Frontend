@@ -36,6 +36,7 @@ interface Props {
     groups: Array<GroupRoom>;
     onSelectFriend: Function;
     onSelectGroup: Function;
+    onCreateGroup: Function;
 }
 
 const modalStyle = {
@@ -85,7 +86,7 @@ const getStyles = (name: string, personName: Array<string>, theme: Theme) => {
 };
 
 
-export default function PermanentDrawerRight({friends, groups, onSelectFriend, onSelectGroup}: Props) {
+export default function PermanentDrawerRight({friends, groups, onSelectFriend, onCreateGroup, onSelectGroup}: Props) {
     const [modalOpen, setModalOpen] = React.useState(false);
     const handleModalOpen = () => setModalOpen(true);
     const handleModalClose = () => setModalOpen(false);
@@ -107,7 +108,7 @@ export default function PermanentDrawerRight({friends, groups, onSelectFriend, o
     };
 
     const handleNewGroupCreation = async ( name: string, members: Array<string> ) => {
-        //TODO call backend to create group, add group to right panel
+        // call backend to create group, add group to right panel
         const prepared = members;
         if(currentUser) {
             prepared.push(currentUser.id);
@@ -116,6 +117,7 @@ export default function PermanentDrawerRight({friends, groups, onSelectFriend, o
 
         setPersonName([]);
         setModalOpen(false);
+        onCreateGroup({ name, idUtilisateurs: prepared })
     };
 
     const friendFromId = (id : string) => friends.find(f => f.id === id);

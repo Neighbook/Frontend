@@ -49,9 +49,12 @@ export default function ChatRoom({ members, messages, sendMessage }: Props) {
                             flexDirection: 'column',
                             alignItems: msg.senderId === currentUser?.id ? 'flex-end' : 'flex-start'
                         }}>
-                            <Typography>
-                                {msg.senderId === currentUser?.id ? 'Moi' : members?.find(m => m.id === msg.senderId)?.prenom}
-                            </Typography>
+                            {
+                                id === 0 || messages[id-1].senderId !== msg.senderId ?
+                                    <Typography>
+                                        {msg.senderId === currentUser?.id ? 'Moi' : members?.find(m => m.id === msg.senderId)?.prenom}
+                                    </Typography> : ''
+                            }
                             <Box sx={{
                                 background: msg.senderId === currentUser?.id ? '#E4E6BF' : '#879472',
                                 padding: '5px 10px',
