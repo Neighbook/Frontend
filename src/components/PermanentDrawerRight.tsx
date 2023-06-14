@@ -96,7 +96,7 @@ export default function PermanentDrawerRight({friends, chattingWith, groups, onS
     const theme = useTheme();
     const { currentUser } = useAuth();
 
-
+    const [searchFilter, setSearchFilter] = React.useState(null);
 
     const handleNewGroupChange = (event: SelectChangeEvent<typeof personName>) => {
         const {
@@ -140,7 +140,13 @@ export default function PermanentDrawerRight({friends, chattingWith, groups, onS
                 anchor="right"
             >
                 <Typography variant="h6" sx={{ marginTop: '10px', fontWeight: 'bold' }} color='#64675A' textAlign={'center'}>Messagerie</Typography>
-                <TextField sx={{ margin: '10px' }} type="text" placeholder='Rechercher'/> 
+                <TextField
+                    sx={{ margin: '10px' }}
+                    type="text"
+                    placeholder='Rechercher'
+                    value={searchFilter}
+                    onChange={e => setSearchFilter(e.target.value)}
+                /> 
                 
                 <Button variant='outlined' onClick={handleModalOpen}>
                     <AddIcon />
@@ -200,7 +206,10 @@ export default function PermanentDrawerRight({friends, chattingWith, groups, onS
                 </Modal>
                 <List>
                     {
-                        groups.map((group, index) => (
+                        (searchFilter ? 
+                            groups.filter(g => g.name.toLowerCase().includes(searchFilter.toLowerCase())) :
+                            groups
+                        ).map((group, index) => (
                             <ListItem
                                 key={group.name}
                                 disablePadding
@@ -228,8 +237,19 @@ export default function PermanentDrawerRight({friends, chattingWith, groups, onS
                             </ListItem>
                         ))
                     }
-                    {friends.map((friend, index) => (
-                        <ListItem key={friend.nom} disablePadding onClick={() => {onSelectFriend(friend);}}>
+                    {(searchFilter ? 
+                        friends.filter(f => (f.prenom && f.prenom.toLowerCase().includes(searchFilter.toLowerCase()))) : friends
+                    ).map((friend, index) => (
+                        <ListItem
+                            key={friend.nom}
+                            disablePadding
+                            onClick={() => {onSelectFriend(friend);}}
+                            style={
+                                chattingWith?.id === friend.id ? {
+                                    backgroundColor: '#eee'
+                                } : {}
+                            }
+                        >
                             <ListItemButton>
                                 <img
                                     style={{ marginRight: '10px', clipPath: 'circle()' }}

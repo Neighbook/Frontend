@@ -53,6 +53,7 @@ const Messagerie = () => {
                     .then((list) => {
                         if (list && list.length) {
                             setFriends(list);
+                            setChatWith(list[0]);
                         }
                     })
                     .catch((e) => { console.log(e); });
