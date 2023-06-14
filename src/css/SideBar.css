@@ -1,3 +1,7 @@
+:root {
+  --active-item-color: #e6e1d6;
+}
+
 .sidebar-logo{
     width: 149px;
     height: 92.78px;
@@ -7,6 +11,10 @@
     color: inherit;
     text-decoration: inherit;
     width: 100%;
+}
+
+.sidebar-link:hover{
+  background-color: var(--active-item-color);
 }
 
 .sidebar-link span{
@@ -32,10 +40,17 @@
   width: 30px;
   height: 30px;
   position: fixed;
-  top: 10px; /* Ajustez cette valeur selon vos besoins */
-  left: 20px; /* Ajustez cette valeur selon vos besoins */
-  z-index: 1200; /* Assurez-vous que le bouton burger a un index de z supérieur pour être au-dessus du contenu */
+  top: 10px;
+  left: 20px;
+  z-index: 1200;
 }
+
 .side-bar{
   background: #ffffff;
+}
+
+.active-item {
+  background-color: var(--active-item-color);
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }

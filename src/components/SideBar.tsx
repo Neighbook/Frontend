@@ -26,11 +26,12 @@ interface SidebarItemProps{
     icon: string;
     text: string;
     url: string;
+    location: string;
 }
 
-const SideBarItem = ({icon, text, url}: SidebarItemProps) => (
+const SideBarItem = ({icon, text, url, location}: SidebarItemProps) => (
     <ListItem>
-        <Link to={url} className="sidebar-link">
+        <Link to={url} className={`sidebar-link ${location === url ? 'active-item' : ''}`}>
             <ListItemButton>
                 <ListItemIcon sx={{ mr: 0.5, height: "2rem", aspectRatio: 1/1 }}><img src={icon} alt={text}/></ListItemIcon>
                 <ListItemText primary={text}/>
@@ -41,16 +42,19 @@ const SideBarItem = ({icon, text, url}: SidebarItemProps) => (
 
 interface SideBarProps {
     onToggle: (isOpen: boolean) => void;
+    location: string;
 }
 
-export default function SideBar({onToggle }: SideBarProps ) {
+const mediaQuery = window.matchMedia('(min-width: 1200px)');
+
+export default function SideBar({onToggle, location}: SideBarProps ) {
     const {onLogout} = useAuth();
 
     const handleClick = () => {
         onLogout();
     };
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(mediaQuery.matches);
 
     const handleStateChange = ({ isOpen }: { isOpen: boolean }) => {
         setIsOpen(isOpen);
@@ -67,14 +71,14 @@ export default function SideBar({onToggle }: SideBarProps ) {
                     <UserSearch/>
                 </ListItem>
                 <Divider sx={{mt: 1, mb: 1}} />
-                <SideBarItem icon={home} text="Accueil" url="/"/>
-                <SideBarItem icon={social} text="Social" url="/social"/>
-                <SideBarItem icon={marketplace} text="Marketplace" url="/marketplace"/>
-                <SideBarItem icon={messagerie} text="Messagerie" url="/messagerie"/>
-                <SideBarItem icon={calendar} text="Calendrier" url="/calendar"/>
+                <SideBarItem icon={home} text="Accueil" url="/" location={location}/>
+                <SideBarItem icon={social} text="Social" url="/social" location={location}/>
+                <SideBarItem icon={marketplace} text="Marketplace" url="/marketplace" location={location}/>
+                <SideBarItem icon={messagerie} text="Messagerie" url="/messagerie" location={location}/>
+                <SideBarItem icon={calendar} text="Calendrier" url="/calendar" location={location}/>
             </List>
             <List style={{ marginTop: `auto` }} >
-                <SideBarItem icon={account} text="Mon compte" url="/compte"/>
+                <SideBarItem icon={account} text="Mon compte" url="/compte"  location={location}/>
                 <ListItem>
                     <Button variant="contained"
                         fullWidth
