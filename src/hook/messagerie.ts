@@ -8,12 +8,12 @@ export interface GroupRoom {
 }
 
 export interface Message {
-    idMessage: number;
+    idMessage?: number;
     senderId: string;
-    receiverOrRoomId: string;
-    isRoomMessage: boolean;
+    receiverOrRoomId?: string;
+    isRoomMessage?: boolean;
     content: string;
-    date: string;
+    date?: string;
 }
 
 export const createGroup = async (
