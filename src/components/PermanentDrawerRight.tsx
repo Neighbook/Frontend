@@ -32,6 +32,7 @@ import { createGroup } from "../hook/messagerie";
 const drawerWidth = 240;
 
 interface Props {
+    chattingWith: User | GroupRoom | null;
 	friends: Array<User>;
     groups: Array<GroupRoom>;
     onSelectFriend: Function;
@@ -86,7 +87,7 @@ const getStyles = (name: string, personName: Array<string>, theme: Theme) => {
 };
 
 
-export default function PermanentDrawerRight({friends, groups, onSelectFriend, onCreateGroup, onSelectGroup}: Props) {
+export default function PermanentDrawerRight({friends, chattingWith, groups, onSelectFriend, onCreateGroup, onSelectGroup}: Props) {
     const [modalOpen, setModalOpen] = React.useState(false);
     const handleModalOpen = () => setModalOpen(true);
     const handleModalClose = () => setModalOpen(false);
@@ -200,7 +201,16 @@ export default function PermanentDrawerRight({friends, groups, onSelectFriend, o
                 <List>
                     {
                         groups.map((group, index) => (
-                            <ListItem key={group.name} disablePadding onClick={() => {onSelectGroup(group);}}>
+                            <ListItem
+                                key={group.name}
+                                disablePadding
+                                onClick={() => {onSelectGroup(group);}}
+                                style={
+                                    chattingWith?.id === group.id ? {
+                                        backgroundColor: '#eee'
+                                    } : {}
+                                }
+                            >
                                 <ListItemButton>
                                     <img
                                         style={{

@@ -27,6 +27,21 @@ const Messagerie = () => {
 
     const socket = useRef<Socket<ServerToClientEvents, ClientToServerEvents> | null>(null);
 
+    const refreshGroups = () => {
+        const controller = new AbortController();
+        if(currentUser) {
+            getGroups(currentUser.id, controller.signal)
+                .then((list) => {
+                    if (list && list.length) {
+                        list.reverse();
+                        setGroups(list);
+                        startChattingWithGroup(list[0]);
+                    }
+                })
+                .catch((e) => { console.log(e); });
+        }
+    };
+
     useEffect(() => {
         const controller = new AbortController();
         if (currentUser && currentUser.id) {
@@ -38,20 +53,10 @@ const Messagerie = () => {
                     .then((list) => {
                         if (list && list.length) {
                             setFriends(list);
-                            startChattingWithFriend(list[0]);
                         }
                     })
                     .catch((e) => { console.log(e); });
-                if(currentUser) {
-                    getGroups(currentUser.id, controller.signal)
-                        .then((list) => {
-                            if (list && list.length) {
-                                setGroups(list);
-                                console.log(list);
-                            }
-                        })
-                        .catch((e) => { console.log(e); });
-                }
+                refreshGroups();
             });
 
             socket.current.on("disconnect", () => {
@@ -160,9 +165,13 @@ const Messagerie = () => {
                 )}
             </Box>
             <PermanentDrawerRight
+                chattingWith={chattingWith}
                 onSelectFriend={startChattingWithFriend}
                 onSelectGroup={startChattingWithGroup}
-                onCreateGroup={(group: GroupRoom) => setGroups([...groups, group])}
+                onCreateGroup={(group: GroupRoom) => {
+                    setGroups([group, ...groups]);
+                    refreshGroups();
+                }}
                 friends={friends}
                 groups={groups}
             />
