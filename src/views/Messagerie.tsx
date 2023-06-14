@@ -8,7 +8,7 @@ import ChatProfile from "../components/ChatProfile";
 import io, { type Socket } from "socket.io-client";
 import ChatRoom from "../components/ChatRoom";
 import type { ClientToServerEvents, ServerToClientEvents } from "../models/Socket";
-import { getGroups } from "../hook/messagerie";
+import { GroupRoom, getGroups } from "../hook/messagerie";
 
 interface Message {
   sender: string;
@@ -17,8 +17,9 @@ interface Message {
 
 const Messagerie = () => {
     const { currentUser } = useAuth();
-    const [chattingWith, setChatWith] = useState<User | null>(null);
+    const [chattingWith, setChatWith] = useState<User | GroupRoom | null>(null);
     const [friends, setFriends] = useState<Array<User>>([]);
+    const [groups, setGroups] = useState<Array<GroupRoom>>([]);
     const [messages, _setMessages] = useState<Array<Message>>([]);
     const _messages = useRef<Array<Message>>([]);
     const setMessages = (data: Array<Message>) => {
@@ -41,7 +42,7 @@ const Messagerie = () => {
                     .then((list) => {
                         if (list && list.length) {
                             setFriends(list);
-                            startChattingWith(list[0]);
+                            startChattingWithFriend(list[0]);
                         }
                     })
                     .catch((e) => { console.log(e); });
@@ -49,8 +50,7 @@ const Messagerie = () => {
                     getGroups(currentUser.id, controller.signal)
                         .then((list) => {
                             if (list && list.length) {
-                                // setFriends(list);
-                                // startChattingWith(list[0]);
+                                setGroups(list);
                                 console.log(list);
                             }
                         })
@@ -85,16 +85,27 @@ const Messagerie = () => {
         };
     }, [currentUser]);
 
-    const startChattingWith = (friend: User) => {
-        if (!socket.current || !currentUser || !currentUser.id || !friend || !friend.id) {
+    const startChattingWithFriend = (target: User) => {
+        if (!socket.current || !currentUser || !currentUser.id || !target || !target.id) {
             return;
         }
 
         socket.current.emit("connectToSomeone", {
-            receiverId: friend.id,
+            receiverId: target.id,
             senderId: currentUser.id,
         });
-        setChatWith(friend);
+        setChatWith(target);
+    };
+
+    const startChattingWithGroup = (target: GroupRoom) => {
+        if (!socket.current || !currentUser || !currentUser.id || !target || !target.id) {
+            return;
+        }
+
+        socket.current.emit("connectToGroup", {
+            roomId: target.id
+        });
+        setChatWith(target);
     };
 
     const sendMessage = (msg: string) => {
@@ -115,12 +126,24 @@ const Messagerie = () => {
             <Box sx={{ width: "calc(100% - 240px)", height: "100%", display: "flex", flexDirection: "column" }}>
                 {chattingWith && (
                     <>
-                        <ChatProfile photo={chattingWith.photo} nom={chattingWith.nom} prenom={chattingWith.prenom} />
-                        <ChatRoom sendMessage={sendMessage} receiver={chattingWith} messages={messages} />
+                        <ChatProfile
+                            photo={chattingWith?.name ? 'https://cdn-icons-png.flaticon.com/128/1769/1769041.png': 'https://cdn-icons-png.flaticon.com/128/1144/1144760.png'}
+                            nom={chattingWith?.name || `${chattingWith.nom || ''} ${chattingWith.prenom || ''}`}
+                        />
+                        <ChatRoom
+                            sendMessage={sendMessage}
+                            receiver={chattingWith}
+                            messages={messages}
+                        />
                     </>
                 )}
             </Box>
-            <PermanentDrawerRight onSelect={startChattingWith} friends={friends} />
+            <PermanentDrawerRight
+                onSelectFriend={startChattingWithFriend}
+                onSelectGroup={startChattingWithGroup}
+                friends={friends}
+                groups={groups}
+            />
         </Container>
     );
 };

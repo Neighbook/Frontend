@@ -2,13 +2,12 @@ import { Typography, Box } from "@mui/material";
 
 export type User = {
 	photo: string | null | undefined;
-	prenom: string | undefined;
     nom: string | undefined;
 }
 
 type Props = User
 
-export default function ChatProfile({ photo, nom, prenom }: Props) {
+export default function ChatProfile({ photo, nom }: Props) {
     return (
         <Box
             sx={{
@@ -25,7 +24,7 @@ export default function ChatProfile({ photo, nom, prenom }: Props) {
                 width={50}
             />
             <Typography variant="h6" fontWeight='bold' color='#64675A' noWrap component="div">
-                {prenom} {nom}
+                {nom}
             </Typography>
         </Box>
     );
