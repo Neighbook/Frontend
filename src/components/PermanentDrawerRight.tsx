@@ -25,6 +25,8 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Chip from '@mui/material/Chip';
 import { Form } from 'react-router-dom';
+import { useAuth } from "../components/AuthProvider";
+import { createGroup } from "../hook/messagerie";
 
 const drawerWidth = 240;
 
@@ -84,9 +86,10 @@ export default function PermanentDrawerRight({friends, onSelect}: Props) {
     const [modalOpen, setModalOpen] = React.useState(false);
     const handleModalOpen = () => setModalOpen(true);
     const handleModalClose = () => setModalOpen(false);
+    const [groupName, setGroupName] = React.useState<string>('');
     const [personName, setPersonName] = React.useState<string[]>([]);
     const theme = useTheme();
-    
+    const { currentUser } = useAuth();
 
 
 
@@ -100,11 +103,15 @@ export default function PermanentDrawerRight({friends, onSelect}: Props) {
         );
     };
 
-    const handleNewGroupCreation = () => {
+    const handleNewGroupCreation = async ( name: string, members: Array<string> ) => {
         //TODO call backend to create group, add group to right panel
+        const res = await createGroup(name, [...members, currentUser?.id]);
+
         setPersonName([]);
         setModalOpen(false);
     };
+
+    const friendFromId = (id : string) => friends.find(f => f.id === id);
 
     return (
         <Box sx={{ display: 'flex' }}>
@@ -140,7 +147,12 @@ export default function PermanentDrawerRight({friends, onSelect}: Props) {
                         </Typography>
                         <FormControl sx={{ m: 1, width: 300 }}>
                             {/* <InputLabel id="new_group_name">Nom</InputLabel> */}
-                            <TextField type='text' label='Nom'/>
+                            <TextField
+                                type='text'
+                                label='Nom'
+                                value={groupName}
+                                onChange={e => setGroupName(e.target.value)}
+                            />
                         </FormControl>
                         <FormControl sx={{ m: 1, width: 300 }}>
                             <InputLabel id="members-label">Membres</InputLabel>
@@ -154,7 +166,7 @@ export default function PermanentDrawerRight({friends, onSelect}: Props) {
                                 renderValue={(selected) => (
                                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                         {selected.map((value) => (
-                                            <Chip key={value} label={value} />
+                                            <Chip key={value} label={`${friendFromId(value)?.nom || ''} ${friendFromId(value)?.prenom || ''}`} />
                                         ))}
                                     </Box>
                                 )}
@@ -163,7 +175,7 @@ export default function PermanentDrawerRight({friends, onSelect}: Props) {
                                 {friends.map((friend, index) => (
                                     <MenuItem
                                         key={index}
-                                        value={friend.nom}
+                                        value={friend.id}
                                     >
                                         {friend.nom} {friend.prenom}
                                     </MenuItem>
@@ -171,7 +183,7 @@ export default function PermanentDrawerRight({friends, onSelect}: Props) {
                             </Select>
                         </FormControl>
                         <FormControl sx={{ m: 1, width: 20 }}>
-                            <Button variant='contained' onClick={handleNewGroupCreation}>Créer</Button>
+                            <Button variant='contained' onClick={() => handleNewGroupCreation(groupName, personName)}>Créer</Button>
                         </FormControl>
                         
                     </Box>

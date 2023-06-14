@@ -44,3 +44,4 @@ export const getMessages = async (userId: string, receiverOrRoomId: string, sign
     }
     return null;
 };
+
