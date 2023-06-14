@@ -8,7 +8,7 @@ import ChatProfile from "../components/ChatProfile";
 import io, { type Socket } from "socket.io-client";
 import ChatRoom from "../components/ChatRoom";
 import type { ClientToServerEvents, ServerToClientEvents } from "../models/Socket";
-import { createGroup } from "../hook/messagerie";
+import { getGroups } from "../hook/messagerie";
 
 interface Message {
   sender: string;
@@ -33,7 +33,7 @@ const Messagerie = () => {
     useEffect(() => {
         const controller = new AbortController();
         if (currentUser && currentUser.id) {
-            socket.current = io("http://localhost:3000", {
+            socket.current = io("https://demo.neighbook.tech/", {
                 transports: ["websocket"],
             });
             socket.current.on("connect", () => {
@@ -45,6 +45,17 @@ const Messagerie = () => {
                         }
                     })
                     .catch((e) => { console.log(e); });
+                if(currentUser) {
+                    getGroups(currentUser.id, controller.signal)
+                        .then((list) => {
+                            if (list && list.length) {
+                                // setFriends(list);
+                                // startChattingWith(list[0]);
+                                console.log(list);
+                            }
+                        })
+                        .catch((e) => { console.log(e); });
+                }
             });
 
             socket.current.on("disconnect", () => {
