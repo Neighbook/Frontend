@@ -33,7 +33,6 @@ export const createGroup = async (
 export const getGroups = async (userId: string, signal: GenericAbortSignal): Promise<Array<GroupRoom> | null> => {
     const apiRes = await messagerieApi.get("groups", {signal: signal, params: {idUser: userId}});
     if(apiRes.status === 200){
-        console.log(apiRes.data);
         return apiRes.data as Array<GroupRoom>;
     }
     return null;

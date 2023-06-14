@@ -91,6 +91,18 @@ const Messagerie = () => {
             senderId: currentUser.id,
         });
         setChatWith(target);
+
+        // fetch messages history
+        const controller = new AbortController();
+        getMessages(currentUser.id, target.id, controller.signal)
+            .then(history => {
+                if(history) {
+                    setMessages(history);
+                }
+            })
+            .catch(e => {
+                console.log(e);
+            });
     };
 
     const startChattingWithGroup = (target: GroupRoom) => {
@@ -150,6 +162,7 @@ const Messagerie = () => {
             <PermanentDrawerRight
                 onSelectFriend={startChattingWithFriend}
                 onSelectGroup={startChattingWithGroup}
+                onCreateGroup={(group: GroupRoom) => setGroups([...groups, group])}
                 friends={friends}
                 groups={groups}
             />
