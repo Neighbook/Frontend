@@ -26,15 +26,15 @@ export const AuthenticatedLayout = ({ children }: Props) => {
 
     return (
         <Box sx={{display: 'flex'}}>
-                <Box
-                    component="nav"
-                    sx={{
-                        width: isSidebarOpen ? { xs: 150, sm: 250, md: 287 } : 50,
-                        flexShrink: { sm: 0 },
-                    }}
-                >
-                    <SideBar onToggle={handleSidebarToggle} location={location.pathname}/>
-                </Box>
+            <Box
+                component="nav"
+                sx={{
+                    width: isSidebarOpen ? { xs: 150, sm: 250, md: 287 } : 50,
+                    flexShrink: { sm: 0 },
+                }}
+            >
+                <SideBar onToggle={handleSidebarToggle} location={location.pathname}/>
+            </Box>
             <Box
                 component="main"
                 sx={{

@@ -1,0 +1,8 @@
+::-webkit-scrollbar {
+    width: 4px; /* Largeur de la scrollbar */
+}
+  
+::-webkit-scrollbar-thumb {
+    background-color: #c7c6c6; /* Couleur de la poignée de la scrollbar */
+    border-radius: 4px; /* Rayon de courbure de la poignée */
+}
