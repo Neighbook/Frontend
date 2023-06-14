@@ -147,7 +147,11 @@ export const SocialPost = ({post, sx={}, fullSize=false, embedded=false, onPostR
                             <Typography variant="body2" color="text.secondary" mb={1}>
                                 {smartTruncate()}
                             </Typography>
-                            <a onClick={toggleDescription}>
+                            <a onClick={(event) => {
+                                toggleDescription();
+                                event.stopPropagation();
+                                }}
+                            >
                                 {openedDesc ? 'Afficher moins' : 'Afficher plus'}
                             </a>
                         </>

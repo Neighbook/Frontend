@@ -9,11 +9,13 @@ interface Props{
     children: JSX.Element | string
 }
 
+const mediaQuery = window.matchMedia('(min-width: 1200px)');
+
 export const AuthenticatedLayout = ({ children }: Props) => {
     const { isLoggedIn } = useAuth();
     const location = useLocation();
 
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(mediaQuery.matches);
     const handleSidebarToggle = (isOpen: boolean) => {
         setIsSidebarOpen(isOpen);
     };
@@ -24,15 +26,15 @@ export const AuthenticatedLayout = ({ children }: Props) => {
 
     return (
         <Box sx={{display: 'flex'}}>
-            <Box
-                component="nav"
-                sx={{
-                    width: isSidebarOpen ? { xs: 150, sm: 250, md: 287 } : 50,
-                    flexShrink: { sm: 0 },
-                }}
-            >
-                <SideBar onToggle={handleSidebarToggle} />
-            </Box>
+                <Box
+                    component="nav"
+                    sx={{
+                        width: isSidebarOpen ? { xs: 150, sm: 250, md: 287 } : 50,
+                        flexShrink: { sm: 0 },
+                    }}
+                >
+                    <SideBar onToggle={handleSidebarToggle} location={location.pathname}/>
+                </Box>
             <Box
                 component="main"
                 sx={{
