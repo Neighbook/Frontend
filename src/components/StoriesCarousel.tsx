@@ -26,55 +26,82 @@ import { useAuth } from "./AuthProvider";
  */
 export const storiesFromBackend: UserStory[] = [
   {
-    id: "Story0",
-    id_utilisateur: "User0",
+    id: "000022566235",
+    id_utilisateur: "dd45d563-afaf-400e-bf9c-7546f45ddbcd",
     instaStoriesObject: [
       {
-        url: "imgurl",
+        url: "https://picsum.photos/100/100",
         duration: 1500,
-        header: {
-          heading: "Mohit Karekar",
-          subheading: "Posted 30m ago",
-          profileImage: "https://picsum.photos/100/100",
-        },
+      },
+      {
+        url: "https://i.imgur.com/ARMxyC4.png",
+        duration: 1500,
       },
     ],
   },
   {
-    id: "Story1",
-    id_utilisateur: "User1",
+    id: "07845212",
+    id_utilisateur: "b22fd551-39f6-40bd-a5a5-d7e92f9b2638",
+    instaStoriesObject: [
+      {
+        url: "https://i.imgur.com/LBRXhIq.jpg",
+        type: "image",
+      },
+      {
+        url: "https://i.imgur.com/Zo5Kpnd.mp4",
+        type: "video",
+      },
+    ],
   },
   {
-    id: "Story2",
-    id_utilisateur: "User2",
+    id: "000022566235756963",
+    id_utilisateur: "11092c2a-cb00-45b0-b498-063152f053dc",
+    instaStoriesObject: [
+      {
+        url: "https://i.imgur.com/Zo5Kpnd.mp4",
+        type: "video",
+      },
+      {
+        url: "https://i.imgur.com/LBRXhIq.jpg",
+        type: "image",
+      },
+    ],
   },
   {
-    id: "Story3",
-    id_utilisateur: "User3",
+    id: "00002256",
+    id_utilisateur: "f845d114-1a82-47f0-9b99-0468be33e85e",
+    instaStoriesObject: [
+      {
+        url: "https://picsum.photos/100/100",
+        duration: 1500,
+      },
+      {
+        url: "https://i.imgur.com/ARMxyC4.png",
+        duration: 1500,
+      },
+      {
+        url: "https://i.imgur.com/LBRXhIq.jpg",
+        type: "image",
+      },
+      {
+        url: "https://i.imgur.com/ARMxyC4.png",
+        duration: 1500,
+      },
+    ],
   },
   {
-    id: "Story4",
-    id_utilisateur: "User4",
-  },
-  {
-    id: "Story5",
-    id_utilisateur: "User5",
-  },
-  {
-    id: "Story6",
-    id_utilisateur: "User6",
-  },
-  {
-    id: "Story7",
-    id_utilisateur: "User7",
-  },
-  {
-    id: "Story8",
-    id_utilisateur: "User8",
-  },
-  {
-    id: "Story9",
-    id_utilisateur: "User9",
+    id: "07845218431202",
+    id_utilisateur: "b22fd551-39f6-40bd-a5a5-d7e92f9b2638",
+    instaStoriesObject: [
+      {
+        url: "https://i.imgur.com/LBRXhIq.jpg",
+        type: "image",
+      },
+      {
+        url: "https://i.imgur.com/Zo5Kpnd.mp4",
+        type: "video",
+      },
+    ],
   },
 ];
 
@@ -85,13 +112,21 @@ interface storyAvatarProps {
 const UserStoryAvatar = ({ story }: storyAvatarProps) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const navigate = useNavigate();
-  const { usersBase, currentUser } = useAuth();
+  const { usersBase, currentUser, follows } = useAuth();
   const handleBrokenImage = (
     e: React.SyntheticEvent<HTMLImageElement, Event>
   ) => {
     e.currentTarget.src = defaultPfp;
   };
-  const user = usersBase?.find((user) => user.id === story.idUtilisateur);
+  const user = usersBase?.find((user) => user.id === story.id_utilisateur);
+
+  story.instaStoriesObject.forEach((instaStoryObj) => {
+    instaStoryObj.header = {
+      heading: user?.nom + " " + user?.prenom,
+      subheading: "Posted 30m ago",
+      profileImage: user?.photo ? user.photo : defaultPfp,
+    };
+  });
 
   return (
     <>
@@ -131,7 +166,7 @@ const UserStoryAvatar = ({ story }: storyAvatarProps) => {
           }}
           onClick={(event) => {
             event.stopPropagation();
-            navigate(`/stories/${story.id ?? ""}`);
+            navigate(`/story/${story.id ?? ""}`);
           }}
           sx={{ "&:hover": { cursor: "pointer" } }}
         />
@@ -164,7 +199,8 @@ const StoriesCarousel = () => {
       </div>
       <div className="carousel-body">
         {storiesFromBackend.map((item) => {
-          return <UserStoryAvatar story={item} key={item} image={item} />;
+          console.log(storiesFromBackend);
+          return <UserStoryAvatar story={item} key={item.id} image={item} />;
         })}
       </div>
     </section>

@@ -15,6 +15,7 @@ import {
 import {AuthenticatedLayout} from './views/AuthenticatedLayout';
 import {createTheme, ThemeProvider} from "@mui/material";
 import {AuthProvider} from "./components/AuthProvider";
+import FullScreenStories from './views/FullScreenStory';
 
 
 const theme = createTheme({
@@ -54,7 +55,7 @@ const App = () => {
                     <Route path="compte" element={<AuthenticatedLayout><Compte /></AuthenticatedLayout>} />
                     <Route path="user/:userId" element={<AuthenticatedLayout><UserView /></AuthenticatedLayout>} />
                     <Route path="post/:postId" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
-                    <Route path="story/:storyId" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
+                    <Route path="story/:storyId" element={<AuthenticatedLayout><FullScreenStories /></AuthenticatedLayout>} />
                     <Route path="*" element={<PageNotFound />} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />

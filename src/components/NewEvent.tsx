@@ -24,6 +24,10 @@ import EventForm from "./EventForm";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import Slider from "@mui/material/Slider";
+import { useAuth } from "./AuthProvider";
+import { storiesFromBackend } from "./StoriesCarousel";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -63,6 +67,10 @@ interface EditedPost {
   description: string;
 }
 
+interface EditedStory {
+  duration: number;
+}
+
 interface props {
   open: boolean;
   handleClose: Function;
@@ -80,9 +88,13 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 export const NewEvent = ({ open, handleClose, repost, onPost }: props) => {
+  const { currentUser } = useAuth();
   const [formData, updateFormData] = React.useState<EditedPost>({
     titre: "",
     description: "",
+  });
+  const [storyFormData, updateStoryFormData] = React.useState<EditedStory>({
+    duration: 3,
   });
   const [loading, setLoading] = useState<number>(-1);
   const [error, setError] = useState<boolean>(false);
@@ -102,7 +114,7 @@ export const NewEvent = ({ open, handleClose, repost, onPost }: props) => {
     adresse: string;
   }>({ titre: "", dateEvenement: new Date(), adresse: "" });
   const [tabValue, setTabValue] = React.useState(0);
-
+  const [durations, setDurations] = React.useState(Array(4).fill(undefined));
   const handleTabChange = (
     event: React.SyntheticEvent,
     newTabValue: number
@@ -171,9 +183,37 @@ export const NewEvent = ({ open, handleClose, repost, onPost }: props) => {
       });
   };
 
+  const handleStorySubmit = (event) => {
+    const storyId = 1 + Math.random().toFixed(0) * 9999;
+    const instaStoriesObject = [];
+    durations.forEach((drn, i) => {
+      if (drn != undefined && imgUrls[i] != "") {
+        instaStoriesObject.push({
+          url: imgUrls[i],
+          duration: drn * 1000,
+        });
+      }
+    });
+    if (instaStoriesObject.length != 0) {
+      storiesFromBackend.unshift({
+        id: storyId.toString(),
+        id_utilisateur: currentUser?.id,
+        instaStoriesObject: instaStoriesObject,
+      });
+    }
+    handleClose();
+  };
+
   const handleFormChange = (event: React.ChangeEvent<HTMLFormElement>) => {
     updateFormData({
       ...formData,
+      [event.target.name]: event.target.value as string,
+    });
+  };
+
+  const handleStoryFormChange = (event: React.ChangeEvent<HTMLFormElement>) => {
+    updateStoryFormData({
+      ...storyFormData,
       [event.target.name]: event.target.value as string,
     });
   };
@@ -201,6 +241,15 @@ export const NewEvent = ({ open, handleClose, repost, onPost }: props) => {
 
   const handleShowForm = () => {
     setShowEventForm(!showEventForm);
+  };
+
+  const handleDurationChange = (index, newValue) => {
+    console.log(durations);
+    setDurations((prevDurations) => {
+      const newDurations = [...prevDurations];
+      newDurations[index] = newValue;
+      return newDurations;
+    });
   };
 
   return (
@@ -350,7 +399,7 @@ export const NewEvent = ({ open, handleClose, repost, onPost }: props) => {
           </TabPanel>
           <TabPanel value={tabValue} index={1}>
             <DialogContent>
-              <Box component="storyform" onChange={handleFormChange}>
+              <Box component="storyForm" onChange={handleStoryFormChange}>
                 <Grid
                   container
                   rowSpacing={{ xs: 1, sm: 2, md: 3 }}
@@ -393,18 +442,29 @@ export const NewEvent = ({ open, handleClose, repost, onPost }: props) => {
                           ref={(e) => (fileRef.current[i] = e)}
                         />
                       </Box>
-                      <TextField
-                        name={`story-${i}-description`}
-                        margin="normal"
-                        fullWidth
-                        label={`Story ${i+1} description`}
-                        error={error}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        variant="standard"
-                        autoFocus
-                      />
+                      <Stack
+                        spacing={2}
+                        direction="row"
+                        sx={{ mb: 1 }}
+                        alignItems="center"
+                      >
+                        <label>1s</label>
+                        <Slider
+                          name={`story-${i}-duration`}
+                          aria-label="Volume"
+                          value={durations[i]}
+                          onChange={(event, newValue) =>
+                            handleDurationChange(i, newValue)
+                          }
+                          step={1}
+                          defaultValue={5}
+                          marks
+                          valueLabelDisplay="auto"
+                          min={1}
+                          max={10}
+                        />
+                        <label>10s</label>
+                      </Stack>
                     </Grid>
                   ))}
                 </Grid>
@@ -419,8 +479,8 @@ export const NewEvent = ({ open, handleClose, repost, onPost }: props) => {
             </DialogContent>
             <DialogActions>
               <Button
-                onClick={() => {
-                  handleStorySubmit().catch(() => null);
+                onClick={(event) => {
+                  handleStorySubmit(event);
                 }}
               >
                 Ajouter Story
