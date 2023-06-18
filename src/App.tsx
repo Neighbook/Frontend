@@ -47,14 +47,21 @@ const App = () => {
         <ThemeProvider theme={theme}>
             <AuthProvider>
                 <Routes>
-                    <Route index element={<AuthenticatedLayout><Acceuil /></AuthenticatedLayout>} />
+                    <Route index element={<Acceuil />} />
                     <Route path="marketplace" element={<AuthenticatedLayout><Marketplace /></AuthenticatedLayout>} />
+                    {/*<Route path="marketplace" element={<Marketplace />} />*/}
                     <Route path="social" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
+                    {/*<Route path="social" element={<Social />} />*/}
                     <Route path="calendar" element={<AuthenticatedLayout><Calendar /></AuthenticatedLayout>} />
+                    {/*<Route path="calendar" element={<Calendar />} />*/}
                     <Route path="messagerie" element={<AuthenticatedLayout><Messagerie /></AuthenticatedLayout>} />
+                    {/*<Route path="messagerie" element={<Messagerie />} />*/}
                     <Route path="compte" element={<AuthenticatedLayout><Compte /></AuthenticatedLayout>} />
+                    {/*<Route path="compte" element={<Compte />} />*/}
                     <Route path="user/:userId" element={<AuthenticatedLayout><UserView /></AuthenticatedLayout>} />
+                    {/*<Route path="user/:userId" element={<UserView />} />*/}
                     <Route path="post/:postId" element={<AuthenticatedLayout><Social /></AuthenticatedLayout>} />
+                    {/*<Route path="post/:postId" element={<Social />} />*/}
                     <Route path="*" element={<PageNotFound />} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
