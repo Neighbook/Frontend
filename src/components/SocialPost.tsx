@@ -150,7 +150,7 @@ export const SocialPost = ({post, sx={}, fullSize=false, embedded=false, onPostR
                             <a onClick={(event) => {
                                 toggleDescription();
                                 event.stopPropagation();
-                                }}
+                            }}
                             >
                                 {openedDesc ? 'Afficher moins' : 'Afficher plus'}
                             </a>
