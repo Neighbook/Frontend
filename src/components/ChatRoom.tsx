@@ -164,7 +164,7 @@ export default function ChatRoom({ members, messages, sendMessage }: Props) {
                     onKeyDown={e => {
                         const key=e.keyCode || e.which;
                         if (key===13){
-                            send();
+                            void send();
                         }
                     }}
                 /> 
@@ -172,7 +172,9 @@ export default function ChatRoom({ members, messages, sendMessage }: Props) {
                     variant="contained"
                     color="secondary"
                     size="large" sx={{ height: '100%', justifyContent: 'left' }}
-                    onClick={send}
+                    onClick={() => {
+                        void send();
+                    }}
                 >
                     <b>Envoyer</b>
                 </Button>

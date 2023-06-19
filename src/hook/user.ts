@@ -2,7 +2,7 @@ import {userApi, usersApi} from "./neighbookApi";
 import type {GenericAbortSignal} from "axios";
 
 export interface User{
-    id: string;
+    id?: string;
     prenom?: string;
     nom?: string;
     sexe?: string;

@@ -8,12 +8,12 @@ import ChatProfile from "../components/ChatProfile";
 import io, { type Socket } from "socket.io-client";
 import ChatRoom from "../components/ChatRoom";
 import type { ClientToServerEvents, ServerToClientEvents } from "../models/Socket";
-import { GroupRoom, getGroups, getMessages } from "../hook/messagerie";
-import type { Message } from "../hook/messagerie";
+import { getGroups, getMessages } from "../hook/messagerie";
+import type { Message , GroupRoom} from "../hook/messagerie";
 
 const Messagerie = () => {
     const { currentUser } = useAuth();
-    const [chattingWith, setChatWith] = useState<User | GroupRoom | null>(null);
+    const [chattingWith, setChatWith] = useState<GroupRoom | User | null>(null);
     const [friends, setFriends] = useState<Array<User>>([]);
     const [groups, setGroups] = useState<Array<GroupRoom>>([]);
     const [messages, _setMessages] = useState<Array<Message>>([]);
@@ -85,6 +85,7 @@ const Messagerie = () => {
             }
             controller.abort();
         };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentUser]);
 
     const startChattingWithFriend = (target: User) => {
@@ -143,6 +144,8 @@ const Messagerie = () => {
             content: msg,
             date: new Date(),
             isRoomMessage: false,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             receiverOrRoomId: chattingWith.id,
             senderId: currentUser.id,
         });
@@ -154,12 +157,20 @@ const Messagerie = () => {
                 {chattingWith && (
                     <>
                         <ChatProfile
-                            photo={chattingWith?.name ? 'https://cdn-icons-png.flaticon.com/128/1769/1769041.png': 'https://cdn-icons-png.flaticon.com/128/1144/1144760.png'}
-                            nom={chattingWith?.name || `${chattingWith.nom || ''} ${chattingWith.prenom || ''}`}
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            photo={chattingWith.name ? 'https://cdn-icons-png.flaticon.com/128/1769/1769041.png': 'https://cdn-icons-png.flaticon.com/128/1144/1144760.png'}
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/restrict-template-expressions, @typescript-eslint/strict-boolean-expressions
+                            nom={chattingWith.name || `${chattingWith.nom || ''} ${chattingWith.prenom || ''}`}
                         />
                         <ChatRoom
                             sendMessage={sendMessage}
-                            members={(chattingWith && chattingWith.idUtilisateurs) ? friends.filter(f => chattingWith.idUtilisateurs.includes(f.id)) : [chattingWith]}
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                            members={(chattingWith && chattingWith.idUtilisateurs) ? friends.filter(f => (chattingWith as GroupRoom).idUtilisateurs.includes(f.id)) : [chattingWith]}
                             messages={messages}
                         />
                     </>
