@@ -45,3 +45,4 @@ export const baseApi = neighbookApi.getInstance();
 export const userApi = neighbookApi.getInstance(config.user_route);
 export const fileApi = neighbookApi.getInstance(config.file_route);
 export const socialApi = neighbookApi.getInstance(config.social_route);
+export const marketplaceApi = neighbookApi.getInstance(config.marketplace_route);

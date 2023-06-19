@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-// import { useNavigate, useOutletContext} from 'react-router-dom';
 import MyCard from '../components/MyCard';
 import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -8,34 +7,34 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-import type {Annonce} from '../hook/marketplace';
-import {AppBar, Modal, Toolbar} from "@mui/material";
+import type {Offre} from '../hook/marketplace';
+import {Modal} from "@mui/material";
 import MarketplaceFilter from './MarketplaceFilter';
 import AdCard from '../components/AdCard';
-import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import MenuIcon from "@mui/icons-material/Menu";
-import {Outlet} from "react-router-dom";
+import {getOffres} from "../hook/marketplace";
 
 const Marketplace: React.FC = () => {
-    const [data, setData] = useState<Array<Annonce>>([]);
+    const [data, setData] = useState<Array<Offre>|null>([]);
     const [adModalOpened, setAdModalOpened] = useState<boolean>(false);
-    const [adData, setAdData] = useState<Annonce>();
+    const [adData, setAdData] = useState<Offre>();
     const [filtersOpened, setFiltersOpened] = useState<boolean>(false);
     // const [toolbarRender, setToolbarRender] = useOutletContext();
     const [filters, setFilters] = useState<object>({});
     // const navigate = useNavigate();
 
     useEffect(() => {
-        // setToolbarRender(() => toolbarRenderMarketplace());
+        // const controller = new AbortController();
+        // getOffres(controller.signal).then((offres: Array<Offre>|null) => {
+        //     setData(offres);
+        // }).catch(() => null);
         doDatabind();
     }, []);
 
+    // PLACEHOLDER DATA
     const doDatabind = (): void => {
-        // routes.getOffres().then((data)=>setData(data))
-
-
-        const placeholderData: Array<Annonce> = [
+        const placeholderData: Array<Offre> = [
             {
                 idOffre: 1,
                 libelleOffre: "Title 1",
@@ -94,11 +93,11 @@ const Marketplace: React.FC = () => {
         setData(placeholderData);
     };
 
-    const cardActionRender = (ad: Annonce): JSX.Element => {
+    const cardActionRender = (ad: Offre): JSX.Element => {
         return (<ButtonGroup>
             <Button
                 startIcon={<LibraryAddIcon />}
-                onClick={() => { add(ad.idOffre); }}
+                onClick={() => { add(ad); }}
             >
                 Suivre
             </Button>
@@ -111,11 +110,11 @@ const Marketplace: React.FC = () => {
         </ButtonGroup>);
     };
 
-    const add = (id: number): void => {
-        console.log("Suivre ", id);
+    const add = (ad: Offre): void => {
+        console.log("Suivre ", ad.idOffre);
     };
 
-    const show = (ad: Annonce): void => {
+    const show = (ad: Offre): void => {
         console.log("show", ad.idOffre);
         setAdData(ad);
         toggleAdModal(true);
@@ -126,7 +125,7 @@ const Marketplace: React.FC = () => {
     };
 
     return (
-    // Marketplace layout
+    // MARKETPLACE PAGE
         <Box sx={{flexGrow: 1}}>
             <ButtonGroup variant={"contained"} sx={{marginBottom: 2}} fullWidth={true} size={"large"}>
                 <Button
@@ -146,7 +145,8 @@ const Marketplace: React.FC = () => {
                     Filtres
                 </Button>
             </ButtonGroup>
-            {/* AdModal */}
+
+            {/* ADMODAL */}
             <Modal
                 open={adModalOpened}
                 onClose={() => { toggleAdModal(false); }}
@@ -163,7 +163,8 @@ const Marketplace: React.FC = () => {
                     />
                 </Box>
             </Modal>
-            {/* /AdModal */}
+
+            {/* FILTRES */}
             <Drawer
                 anchor={'right'}
                 open={filtersOpened}
@@ -177,22 +178,26 @@ const Marketplace: React.FC = () => {
                     }}
                 />
             </Drawer>
+
+            {/* BROWSE OFFRES */}
             <Box sx={{ flexGrow: 1 }}>
                 <Grid container rowSpacing={3} columnSpacing={3}>
-                    {data.map((ad: Annonce) => (
-                        <Grid item xs={12} md={6} lg={3} key={ad.idOffre}>
-                            <MyCard
-                                sx={{ maxHeight: 500 }}
-                                id={ad.idOffre}
-                                title={ad.libelleOffre}
-                                text={ad.descriptionOffre }
-                                image={ad.image}
-                                renderCardActions={cardActionRender(ad)}
-                            />
-                        </Grid>
-                    ))}
+                    {data === null ? <Box></Box>
+                        : data.map((ad: Offre) => (
+                            <Grid item xs={12} md={6} lg={3} key={ad.idOffre}>
+                                <MyCard
+                                    sx={{ maxHeight: 500 }}
+                                    id={ad.idOffre}
+                                    title={ad.libelleOffre}
+                                    text={ad.descriptionOffre }
+                                    image={ad.image}
+                                    renderCardActions={cardActionRender(ad)}
+                                />
+                            </Grid>
+                        ))}
                 </Grid>
             </Box>
+
         </Box>
     );
 };

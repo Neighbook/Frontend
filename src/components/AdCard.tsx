@@ -1,9 +1,9 @@
-import {FunctionComponent} from "react";
+import type {FunctionComponent} from "react";
 import MyCard from './MyCard';
-import type { Annonce } from '../hook/marketplace';
+import type { Offre } from '../hook/marketplace';
 
 interface AdProps {
-    ad?: Annonce,
+    ad?: Offre,
     buttonName?: string,
     callback: Function,
 }

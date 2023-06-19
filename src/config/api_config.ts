@@ -4,4 +4,5 @@ export const config = {
     user_route: "/user",
     social_route: "/social",
     file_route: "/file",
+    marketplace_route: "/marketplace",
 };
