@@ -8,7 +8,7 @@ interface AdProps {
     callback: Function,
 }
 
-const AdCard: FunctionComponent<AdProps> = ({ad, buttonName, callback}) => {
+const CardOffre: FunctionComponent<AdProps> = ({ad, buttonName, callback}) => {
     return (
         <MyCard
             id={ad?.idOffre ?? 0}
@@ -20,4 +20,4 @@ const AdCard: FunctionComponent<AdProps> = ({ad, buttonName, callback}) => {
         />
     );
 };
-export default AdCard;
+export default CardOffre;

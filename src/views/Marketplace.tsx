@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MyCard from '../components/MyCard';
 import Box from '@mui/material/Box';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -8,18 +8,22 @@ import Button from '@mui/material/Button';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import type {Offre} from '../hook/marketplace';
-import {Modal} from "@mui/material";
+import {Alert, Modal, Snackbar} from "@mui/material";
 import MarketplaceFilter from './MarketplaceFilter';
-import AdCard from '../components/AdCard';
+import CardOffre from '../components/CardOffre';
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import MenuIcon from "@mui/icons-material/Menu";
-import {getOffres} from "../hook/marketplace";
+import {getOffres, postOffre} from "../hook/marketplace";
+import {NewOffre} from "../components/NewOffre";
 
 const Marketplace: React.FC = () => {
     const [data, setData] = useState<Array<Offre>|null>([]);
-    const [adModalOpened, setAdModalOpened] = useState<boolean>(false);
+    const [offreModal, setOffreModal] = useState<boolean>(false);
+    const [newOffreModalOpened, setNewOffreModalOppened] = useState<boolean>(false);
     const [adData, setAdData] = useState<Offre>();
     const [filtersOpened, setFiltersOpened] = useState<boolean>(false);
+    const [openedAlert, setOpenedAlert] = useState<boolean>(false);
+    const [postError, setPostError] = useState<string>("");
     // const [toolbarRender, setToolbarRender] = useOutletContext();
     const [filters, setFilters] = useState<object>({});
     // const navigate = useNavigate();
@@ -29,11 +33,7 @@ const Marketplace: React.FC = () => {
         // getOffres(controller.signal).then((offres: Array<Offre>|null) => {
         //     setData(offres);
         // }).catch(() => null);
-        doDatabind();
-    }, []);
 
-    // PLACEHOLDER DATA
-    const doDatabind = (): void => {
         const placeholderData: Array<Offre> = [
             {
                 idOffre: 1,
@@ -91,13 +91,15 @@ const Marketplace: React.FC = () => {
             }
         ];
         setData(placeholderData);
-    };
+    }, [data]);
+
+    // PLACEHOLDER DATA
 
     const cardActionRender = (ad: Offre): JSX.Element => {
         return (<ButtonGroup>
             <Button
                 startIcon={<LibraryAddIcon />}
-                onClick={() => { add(ad); }}
+                onClick={() => { follow(ad); }}
             >
                 Suivre
             </Button>
@@ -110,7 +112,7 @@ const Marketplace: React.FC = () => {
         </ButtonGroup>);
     };
 
-    const add = (ad: Offre): void => {
+    const follow = (ad: Offre): void => {
         console.log("Suivre ", ad.idOffre);
     };
 
@@ -121,7 +123,27 @@ const Marketplace: React.FC = () => {
     };
 
     const toggleAdModal = (state: boolean) => {
-        setAdModalOpened(state);
+        setOffreModal(state);
+    };
+
+    const handleNewOffre = (data: object) => {
+        const controller = new AbortController();
+        postOffre(data as Offre, controller.signal)
+            .then((res) => {
+                if(res !== null) {
+                    setPostError(res);
+                } else {
+                    setPostError("");
+                }
+                openAlert(true);
+            })
+            .catch(() => null);
+    };
+
+    const openAlert = (state: boolean) => {
+        if(state !== openedAlert) {
+            setOpenedAlert(state);
+        }
     };
 
     return (
@@ -132,7 +154,7 @@ const Marketplace: React.FC = () => {
                     sx={{width: '87%'}}
                     color="primary"
                     startIcon={<AddCircleIcon />}
-                    // onClick={() => navigate("/offres/new")}
+                    onClick={() => {setNewOffreModalOppened(true);}}
                 >
                     Ajouter une annonce
                 </Button>
@@ -148,7 +170,7 @@ const Marketplace: React.FC = () => {
 
             {/* ADMODAL */}
             <Modal
-                open={adModalOpened}
+                open={offreModal}
                 onClose={() => { toggleAdModal(false); }}
                 sx={{
                     maxWidth: 1000,
@@ -156,7 +178,7 @@ const Marketplace: React.FC = () => {
                 }}
             >
                 <Box>
-                    <AdCard
+                    <CardOffre
                         ad={adData}
                         buttonName={"Ajouter aux annonces suivies"}
                         callback={() => { toggleAdModal(false); }}
@@ -197,6 +219,32 @@ const Marketplace: React.FC = () => {
                         ))}
                 </Grid>
             </Box>
+
+            <NewOffre
+                open={newOffreModalOpened}
+                handleClose={() => {
+                    setNewOffreModalOppened(false);}}
+                onSubmit={handleNewOffre}
+                closeAfterSuccessfulSubmit={true}
+            />
+
+
+            <Snackbar
+                open={openedAlert}
+                autoHideDuration={3000}
+                onClose={()=>{openAlert(false);}}
+            >
+                <Alert
+                    onClose={()=>{openAlert(false);}}
+                    severity={postError.length===0 ? "success" : "error"}
+                    sx={{ width: '100%' }}
+                >
+                    {postError.length===0
+                        ? "La nouvelle annonce a été postée !"
+                        : postError
+                    }
+                </Alert>
+            </Snackbar>
 
         </Box>
     );
