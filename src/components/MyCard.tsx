@@ -5,17 +5,17 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import {FunctionComponent} from "react";
+import type {FunctionComponent} from "react";
 
 interface MyCardProps {
     id: number,
-    sx: object,
+    sx?: object,
     title: string,
     text: string,
     renderCardActions?: JSX.Element,
-    buttonName: string,
-    action: Function,
-
+    buttonName?: string,
+    action?: Function,
+    image: string
 }
 
 const MyCard : FunctionComponent<MyCardProps> = ({
@@ -23,18 +23,19 @@ const MyCard : FunctionComponent<MyCardProps> = ({
     title="",
     text="",
     renderCardActions,
-    action,
+    action = () => {console.log('action');},
     id,
-    buttonName
+    buttonName,
+    image
 }) => {
     return (
         <Card sx={sx}>
             <CardMedia
                 component="img"
                 height="200"
-                image={'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.moneycrashers.com%2Fwp-content%2Fuploads%2F2019%2F03%2Ffind-good-babysitter.jpg&f=1&nofb=1&ipt=22c754cdf82932bbfe83c8937030f3bdc526af44ec2b9339284df8da9c8f601c&ipo=images'}
-                title="market-add"
-                alt="market-add"
+                image={image}
+                title="ad-picture"
+                alt="ad-picture"
             />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
@@ -48,7 +49,7 @@ const MyCard : FunctionComponent<MyCardProps> = ({
                 {renderCardActions ? (
                     renderCardActions
                 ) : (
-                    <Button size="small" onClick={() => {action(id)}}>{buttonName}</Button>
+                    <Button size="small" onClick={() => {action(id);}}>{buttonName}</Button>
                 )}
             </CardActions>
         </Card>

@@ -8,33 +8,93 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
-import type {AdInterface} from '../components/AdCard';
-import {Modal} from "@mui/material";
+import type {Annonce} from '../hook/marketplace';
+import {AppBar, Modal, Toolbar} from "@mui/material";
 import MarketplaceFilter from './MarketplaceFilter';
 import AdCard from '../components/AdCard';
 import IconButton from "@mui/material/IconButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import MenuIcon from "@mui/icons-material/Menu";
+import {Outlet} from "react-router-dom";
 
 const Marketplace: React.FC = () => {
-    const [data, setData] = useState<Array<AdInterface>>([]);
+    const [data, setData] = useState<Array<Annonce>>([]);
     const [adModalOpened, setAdModalOpened] = useState<boolean>(false);
-    const [adData, setAdData] = useState<AdInterface>();
+    const [adData, setAdData] = useState<Annonce>();
     const [filtersOpened, setFiltersOpened] = useState<boolean>(false);
     // const [toolbarRender, setToolbarRender] = useOutletContext();
     const [filters, setFilters] = useState<object>({});
     // const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     setToolbarRender(() => toolbarRenderMarketplace());
-    //     doDatabind();
-    // }, []);
+    useEffect(() => {
+        // setToolbarRender(() => toolbarRenderMarketplace());
+        doDatabind();
+    }, []);
 
-    // const doDatabind = (): void => {
-    //     routes.getOffres().then((data)=>setData(data))
-    // };
+    const doDatabind = (): void => {
+        // routes.getOffres().then((data)=>setData(data))
 
-    const cardActionRender = (ad: AdInterface): JSX.Element => {
+
+        const placeholderData: Array<Annonce> = [
+            {
+                idOffre: 1,
+                libelleOffre: "Title 1",
+                descriptionOffre:"    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fteamsters848.org%2Fwp-content%2Fuploads%2F2017%2F04%2Freject-job-offer-903x600.jpg&f=1&nofb=1&ipt=bc5a8ee75e41a48a24ed023f02cebecb80eeec878f2e0533704dba375d93e449&ipo=images",
+            },
+            {
+                idOffre: 2,
+                libelleOffre: "Title 2",
+                descriptionOffre:"    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fteamsters848.org%2Fwp-content%2Fuploads%2F2017%2F04%2Freject-job-offer-903x600.jpg&f=1&nofb=1&ipt=bc5a8ee75e41a48a24ed023f02cebecb80eeec878f2e0533704dba375d93e449&ipo=images",
+            },
+            {
+                idOffre: 3,
+                libelleOffre: "Title 3",
+                descriptionOffre:"    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fteamsters848.org%2Fwp-content%2Fuploads%2F2017%2F04%2Freject-job-offer-903x600.jpg&f=1&nofb=1&ipt=bc5a8ee75e41a48a24ed023f02cebecb80eeec878f2e0533704dba375d93e449&ipo=images",
+            },
+            {
+                idOffre: 4,
+                libelleOffre: "Title 4",
+                descriptionOffre:"    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fteamsters848.org%2Fwp-content%2Fuploads%2F2017%2F04%2Freject-job-offer-903x600.jpg&f=1&nofb=1&ipt=bc5a8ee75e41a48a24ed023f02cebecb80eeec878f2e0533704dba375d93e449&ipo=images",
+            },
+            {
+                idOffre: 5,
+                libelleOffre: "Title 5",
+                descriptionOffre:"    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fteamsters848.org%2Fwp-content%2Fuploads%2F2017%2F04%2Freject-job-offer-903x600.jpg&f=1&nofb=1&ipt=bc5a8ee75e41a48a24ed023f02cebecb80eeec878f2e0533704dba375d93e449&ipo=images",
+            },
+            {
+                idOffre: 6,
+                libelleOffre: "Title 6",
+                descriptionOffre:"    Lore ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fteamsters848.org%2Fwp-content%2Fuploads%2F2017%2F04%2Freject-job-offer-903x600.jpg&f=1&nofb=1&ipt=bc5a8ee75e41a48a24ed023f02cebecb80eeec878f2e0533704dba375d93e449&ipo=images",
+            },
+            {
+                idOffre: 7,
+                libelleOffre: "Title 7",
+                descriptionOffre:"    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fteamsters848.org%2Fwp-content%2Fuploads%2F2017%2F04%2Freject-job-offer-903x600.jpg&f=1&nofb=1&ipt=bc5a8ee75e41a48a24ed023f02cebecb80eeec878f2e0533704dba375d93e449&ipo=images",
+            },
+            {
+                idOffre: 8,
+                libelleOffre: "Title 8",
+                descriptionOffre:"    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fteamsters848.org%2Fwp-content%2Fuploads%2F2017%2F04%2Freject-job-offer-903x600.jpg&f=1&nofb=1&ipt=bc5a8ee75e41a48a24ed023f02cebecb80eeec878f2e0533704dba375d93e449&ipo=images",
+            },
+            {
+                idOffre: 9,
+                libelleOffre: "Title 9",
+                descriptionOffre:"    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                image: "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fteamsters848.org%2Fwp-content%2Fuploads%2F2017%2F04%2Freject-job-offer-903x600.jpg&f=1&nofb=1&ipt=bc5a8ee75e41a48a24ed023f02cebecb80eeec878f2e0533704dba375d93e449&ipo=images",
+            }
+        ];
+        setData(placeholderData);
+    };
+
+    const cardActionRender = (ad: Annonce): JSX.Element => {
         return (<ButtonGroup>
             <Button
                 startIcon={<LibraryAddIcon />}
@@ -55,41 +115,38 @@ const Marketplace: React.FC = () => {
         console.log("Suivre ", id);
     };
 
-    const show = (ad: AdInterface): void => {
+    const show = (ad: Annonce): void => {
         console.log("show", ad.idOffre);
         setAdData(ad);
         toggleAdModal(true);
     };
-
-    // function toolbarRenderMarketplace(): JSX.Element {
-    //     return (
-    //         <>
-    //             <Button
-    //                 fullWidth={true}
-    //                 size="large"
-    //                 color="inherit"
-    //                 startIcon={<AddCircleIcon />}
-    //                 sx={{ mr: 2 }}
-    //                 onClick={() => navigate("/offres/new")}
-    //             >
-    //                 Ajouter une annonce
-    //             </Button>
-    //
-    //             <IconButton
-    //                 onClick={() => setFiltersOpened(true)}
-    //             >
-    //                 <MenuIcon />
-    //             </IconButton>
-    //         </>
-    //     );
-    // }
 
     const toggleAdModal = (state: boolean) => {
         setAdModalOpened(state);
     };
 
     return (
-        <>
+    // Marketplace layout
+        <Box sx={{flexGrow: 1}}>
+            <ButtonGroup variant={"contained"} sx={{marginBottom: 2}} fullWidth={true} size={"large"}>
+                <Button
+                    sx={{width: '87%'}}
+                    color="primary"
+                    startIcon={<AddCircleIcon />}
+                    // onClick={() => navigate("/offres/new")}
+                >
+                    Ajouter une annonce
+                </Button>
+
+                <Button
+                    sx={{width: '13%'}}
+                    onClick={() => { setFiltersOpened(true); }}
+                    endIcon={<MenuIcon/>}
+                >
+                    Filtres
+                </Button>
+            </ButtonGroup>
+            {/* AdModal */}
             <Modal
                 open={adModalOpened}
                 onClose={() => { toggleAdModal(false); }}
@@ -106,6 +163,7 @@ const Marketplace: React.FC = () => {
                     />
                 </Box>
             </Modal>
+            {/* /AdModal */}
             <Drawer
                 anchor={'right'}
                 open={filtersOpened}
@@ -113,7 +171,7 @@ const Marketplace: React.FC = () => {
             >
                 <MarketplaceFilter
                     values={filters}
-                    callback={(f) => {
+                    callback={(f: object) => {
                         setFilters(f);
                         console.log(f);
                     }}
@@ -121,8 +179,8 @@ const Marketplace: React.FC = () => {
             </Drawer>
             <Box sx={{ flexGrow: 1 }}>
                 <Grid container rowSpacing={3} columnSpacing={3}>
-                    {data.map((ad: AdInterface) => (
-                        <Grid item xs={3} key={ad.idOffre}>
+                    {data.map((ad: Annonce) => (
+                        <Grid item xs={12} md={6} lg={3} key={ad.idOffre}>
                             <MyCard
                                 sx={{ maxHeight: 500 }}
                                 id={ad.idOffre}
@@ -135,7 +193,7 @@ const Marketplace: React.FC = () => {
                     ))}
                 </Grid>
             </Box>
-        </>
+        </Box>
     );
 };
 
