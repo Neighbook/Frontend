@@ -28,12 +28,26 @@ const Marketplace: React.FC = () => {
     const [filters, setFilters] = useState<object>({});
     // const navigate = useNavigate();
 
+    /**
+     * Request the backend with the filtered offers
+     */
+    // useEffect(() => {
+    //     const controller = new AbortController();
+    //     getOffres(controller.signal).then((offres: Array<Offre>|null) => {
+    //         setData(offres);
+    //     }).catch(() => null);
+    // }, [filters])
+
+    /**
+     * Request the backend for the offers
+     */
     useEffect(() => {
         // const controller = new AbortController();
         // getOffres(controller.signal).then((offres: Array<Offre>|null) => {
         //     setData(offres);
         // }).catch(() => null);
 
+        // PLACEHOLDER DATA
         const placeholderData: Array<Offre> = [
             {
                 idOffre: 1,
@@ -93,7 +107,6 @@ const Marketplace: React.FC = () => {
         setData(placeholderData);
     }, [data]);
 
-    // PLACEHOLDER DATA
 
     const cardActionRender = (ad: Offre): JSX.Element => {
         return (<ButtonGroup>
