@@ -1,7 +1,7 @@
 import * as React from "react";
 import type {User} from "../hook/user";
 import Typography from "@mui/material/Typography";
-import {Popover} from "@mui/material";
+import {Popover, Popper} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import {useNavigate} from "react-router";
 import defaultPfp from "/asset/images/pfp.png";
@@ -18,26 +18,16 @@ export const UserAvatar = ({user}: props) => {
 
     return (
         <>
-            <Popover
+            <Popper
                 id="mouse-over-popover"
                 sx={{
                     pointerEvents: 'none',
                 }}
                 open={anchorEl!==null}
                 anchorEl={anchorEl}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-                transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                }}
-                onClose={()=>{setAnchorEl(null);}}
-                disableRestoreFocus
             >
                 <Typography>{user.nom_utilisateur}</Typography>
-            </Popover>
+            </Popper>
             <Avatar src={user.photo ?? defaultPfp}
                 imgProps={{ onError: handleBrokenImage }}
                 onMouseEnter={(e)=> {
